@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'auth_controller.dart';
+import '../../../../core/common_widgets/common_button.dart';
+import '../controller/auth_controller.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
@@ -112,17 +113,11 @@ class ForgotPasswordPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        Obx(() => ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF003E99),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              onPressed: controller.isForgotLoading.value ? null : controller.sendOtp,
-              child: controller.isForgotLoading.value
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                  : const Text('SEND VERIFICATION CODE', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        Obx(() => CommonButton(
+              text: 'SEND VERIFICATION CODE',
+              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              isLoading: controller.isForgotLoading.value,
+              onPressed: controller.sendOtp,
             )),
       ],
     );
@@ -148,17 +143,11 @@ class ForgotPasswordPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        Obx(() => ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF003E99),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              onPressed: controller.isForgotLoading.value ? null : controller.verifyOtp,
-              child: controller.isForgotLoading.value
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                  : const Text('VERIFY CODE', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        Obx(() => CommonButton(
+              text: 'VERIFY CODE',
+              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              isLoading: controller.isForgotLoading.value,
+              onPressed: controller.verifyOtp,
             )),
         const SizedBox(height: 12),
         TextButton(
@@ -209,17 +198,11 @@ class ForgotPasswordPage extends StatelessWidget {
             )),
         const SizedBox(height: 24),
 
-        Obx(() => ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF003E99),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              onPressed: controller.isForgotLoading.value ? null : controller.resetPassword,
-              child: controller.isForgotLoading.value
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                  : const Text('RESET PASSWORD NOW', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        Obx(() => CommonButton(
+              text: 'RESET PASSWORD NOW',
+              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              isLoading: controller.isForgotLoading.value,
+              onPressed: controller.resetPassword,
             )),
       ],
     );

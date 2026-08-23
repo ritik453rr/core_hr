@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/routing/app_routes.dart';
-import 'auth_controller.dart';
+import '../../../../core/routing/app_routes.dart';
+import '../../../../core/common_widgets/common_button.dart';
+import '../controller/auth_controller.dart';
 
 // Color palette extracted from the design system
 const Color appBgColor = Color(0xFFF4F5F7);
@@ -219,30 +220,11 @@ class LoginPage extends StatelessWidget {
                       const SizedBox(height: 24),
 
                       // -- Login Button --
-                      Obx(() => ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: primaryBlue,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: controller.isLoginLoading.value ? null : controller.login,
-                            child: controller.isLoginLoading.value
-                                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                                : Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        'Login',
-                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                      ),
-                                      SizedBox(width: 8),
-                                      Icon(Icons.arrow_forward, size: 20),
-                                    ],
-                                  ),
+                      Obx(() => CommonButton(
+                            text: 'Login',
+                            icon: Icons.arrow_forward,
+                            isLoading: controller.isLoginLoading.value,
+                            onPressed: controller.login,
                           )),
                     ],
                   ),

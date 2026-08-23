@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/routing/app_routes.dart';
+import '../../core/common_widgets/common_button.dart';
 import '../attendance/attendance_page.dart';
 import '../field_tracking/field_tracking_page.dart';
 import '../my_team/my_team_page.dart';
@@ -271,34 +272,29 @@ class DashboardPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
+          Obx(() => CommonButton(
+                width: double.infinity,
+                height: 48,
                 backgroundColor: Colors.white,
                 foregroundColor: const Color(0xFF0F172A),
-                elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              onPressed: controller.toggleClockIn,
-              child: Obx(() => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        controller.isClockedIn.value ? Icons.stop_circle_rounded : Icons.play_circle_fill_rounded,
-                        color: controller.isClockedIn.value ? const Color(0xFFDC2626) : const Color(0xFF2563EB),
-                        size: 22,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        controller.isClockedIn.value ? 'CLOCK OUT' : 'CLOCK IN WITH LOCATION',
-                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, letterSpacing: 0.5),
-                      ),
-                    ],
-                  )),
-            ),
-          ),
+                borderRadius: 12,
+                onPressed: controller.toggleClockIn,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      controller.isClockedIn.value ? Icons.stop_circle_rounded : Icons.play_circle_fill_rounded,
+                      color: controller.isClockedIn.value ? const Color(0xFFDC2626) : const Color(0xFF2563EB),
+                      size: 22,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      controller.isClockedIn.value ? 'CLOCK OUT' : 'CLOCK IN WITH LOCATION',
+                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, letterSpacing: 0.5),
+                    ),
+                  ],
+                ),
+              )),
         ],
       ),
     );

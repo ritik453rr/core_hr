@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../core/common_widgets/common_button.dart';
 import 'loan_controller.dart';
 
 class ApplyLoanPage extends StatelessWidget {
@@ -86,17 +87,14 @@ class ApplyLoanPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              SizedBox(
+              CommonButton(
                 width: double.infinity,
                 height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: controller.submitLoanApplication,
-                  child: const Text('SUBMIT LOAN APPLICATION', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-                ),
+                backgroundColor: const Color(0xFF2563EB),
+                borderRadius: 12,
+                text: 'SUBMIT LOAN APPLICATION',
+                textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                onPressed: controller.submitLoanApplication,
               ),
             ],
           ),

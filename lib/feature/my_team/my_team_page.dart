@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../core/common_widgets/common_button.dart';
 import 'my_team_controller.dart';
 
 class MyTeamPage extends StatelessWidget {
@@ -149,13 +150,11 @@ class MyTeamPage extends StatelessWidget {
                                     child: const Text('Reject'),
                                   ),
                                   const SizedBox(width: 8),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF16A34A),
-                                      foregroundColor: Colors.white,
-                                    ),
+                                  CommonButton(
+                                    backgroundColor: const Color(0xFF16A34A),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    text: 'Approve',
                                     onPressed: () => controller.approveRequest(req),
-                                    child: const Text('Approve'),
                                   ),
                                 ],
                               );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/routing/app_routes.dart';
+import '../../core/common_widgets/common_button.dart';
 
 
 class ProfileController extends GetxController {
@@ -54,19 +55,15 @@ class ProfileController extends GetxController {
             onPressed: () => Get.back(),
             child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEF4444),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
+          CommonButton(
+            backgroundColor: const Color(0xFFEF4444),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            text: 'Logout',
             onPressed: () {
               Get.back();
               Get.offAllNamed(AppRoutes.login);
               Get.snackbar('Logged Out', 'You have logged out successfully.', snackPosition: SnackPosition.BOTTOM);
-
             },
-            child: const Text('Logout'),
           ),
         ],
       ),

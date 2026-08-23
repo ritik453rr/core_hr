@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../core/common_widgets/common_button.dart';
 import 'leave_controller.dart';
 
 class ApplyLeavePage extends StatelessWidget {
@@ -135,17 +136,14 @@ class ApplyLeavePage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              SizedBox(
+              CommonButton(
                 width: double.infinity,
                 height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: controller.submitLeaveApplication,
-                  child: const Text('SUBMIT LEAVE REQUEST', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-                ),
+                backgroundColor: const Color(0xFF2563EB),
+                borderRadius: 12,
+                text: 'SUBMIT LEAVE REQUEST',
+                textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                onPressed: controller.submitLeaveApplication,
               ),
             ],
           ),

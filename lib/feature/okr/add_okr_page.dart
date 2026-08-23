@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../core/common_widgets/common_button.dart';
 import 'okr_controller.dart';
 
 class AddOkrPage extends StatelessWidget {
@@ -66,17 +67,14 @@ class AddOkrPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              SizedBox(
+              CommonButton(
                 width: double.infinity,
                 height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF7C3AED),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: controller.addObjective,
-                  child: const Text('CREATE OBJECTIVE', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-                ),
+                backgroundColor: const Color(0xFF7C3AED),
+                borderRadius: 12,
+                text: 'CREATE OBJECTIVE',
+                textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                onPressed: controller.addObjective,
               ),
             ],
           ),

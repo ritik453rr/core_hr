@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../core/common_widgets/common_button.dart';
 import 'attendance_controller.dart';
 
 class AttendancePage extends StatelessWidget {
@@ -87,21 +88,15 @@ class AttendancePage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: Obx(() => ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: controller.isClockedIn.value ? const Color(0xFFDC2626) : const Color(0xFF2563EB),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
-                          onPressed: controller.toggleAttendance,
-                          child: Text(
-                            controller.isClockedIn.value ? 'CLOCK OUT NOW' : 'CLOCK IN WITH LOCATION',
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
-                          ),
-                        )),
-                  ),
+                  Obx(() => CommonButton(
+                        width: double.infinity,
+                        height: 50,
+                        backgroundColor: controller.isClockedIn.value ? const Color(0xFFDC2626) : const Color(0xFF2563EB),
+                        borderRadius: 12,
+                        text: controller.isClockedIn.value ? 'CLOCK OUT NOW' : 'CLOCK IN WITH LOCATION',
+                        textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                        onPressed: controller.toggleAttendance,
+                      )),
                 ],
               ),
             ),
