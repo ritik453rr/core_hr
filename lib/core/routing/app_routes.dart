@@ -3,6 +3,7 @@ class AppRoutes {
   static const String splash = "/splash";
   static const String login = "/login";
   static const String dashboard = "/dashboard";
+  static const String home = "/home";
   static const String attendance = "/attendance";
   static const String holidays = "/holidays";
   static const String leave = "/leave";
@@ -16,7 +17,6 @@ class AppRoutes {
   static const String addOkr = "/add-okr";
   static const String myTeam = "/my-team";
   static const String fieldTracking = "/field-tracking";
-  static const String forgotPassword = "/forgot-password";
   static const String profile = "/profile";
 }
 

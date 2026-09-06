@@ -1,36 +1,37 @@
 import 'package:get/get.dart';
 import '../routing/app_routes.dart';
-import '../../feature/splash/splash_page.dart';
-import '../../feature/splash/splash_controller.dart';
+import '../../feature/splash/presentation/page/splash_page.dart';
+import '../../feature/splash/presentation/controller/splash_controller.dart';
 import '../../feature/auth/presentation/page/login_page.dart';
-import '../../feature/auth/presentation/page/forgot_password_page.dart';
 import '../../feature/auth/presentation/controller/auth_controller.dart';
-import '../../feature/dashboard/dashboard_page.dart';
-import '../../feature/dashboard/dashboard_controller.dart';
-import '../../feature/attendance/attendance_page.dart';
-import '../../feature/attendance/attendance_controller.dart';
-import '../../feature/holidays/holidays_page.dart';
-import '../../feature/holidays/holidays_controller.dart';
-import '../../feature/leave/leave_page.dart';
-import '../../feature/leave/apply_leave_page.dart';
-import '../../feature/leave/leave_controller.dart';
-import '../../feature/loan/loan_page.dart';
-import '../../feature/loan/apply_loan_page.dart';
-import '../../feature/loan/loan_controller.dart';
-import '../../feature/lead_management/lead_management_page.dart';
-import '../../feature/lead_management/add_lead_page.dart';
-import '../../feature/lead_management/lead_controller.dart';
-import '../../feature/hr_documents/hr_documents_page.dart';
-import '../../feature/hr_documents/hr_documents_controller.dart';
-import '../../feature/okr/okr_page.dart';
-import '../../feature/okr/add_okr_page.dart';
-import '../../feature/okr/okr_controller.dart';
-import '../../feature/my_team/my_team_page.dart';
-import '../../feature/my_team/my_team_controller.dart';
-import '../../feature/field_tracking/field_tracking_page.dart';
-import '../../feature/field_tracking/field_tracking_controller.dart';
-import '../../feature/profile/profile_page.dart';
-import '../../feature/profile/profile_controller.dart';
+import '../../feature/dashboard/presentation/page/dashboard_page.dart';
+import '../../feature/dashboard/presentation/controller/dashboard_controller.dart';
+import '../../feature/home/presentation/page/home_page.dart';
+import '../../feature/home/presentation/controller/home_controller.dart';
+import '../../feature/attendance/presentation/page/attendance_page.dart';
+import '../../feature/attendance/presentation/controller/attendance_controller.dart';
+import '../../feature/holidays/presentation/page/holidays_page.dart';
+import '../../feature/holidays/presentation/controller/holidays_controller.dart';
+import '../../feature/leave/presentation/page/leave_page.dart';
+import '../../feature/leave/presentation/page/apply_leave_page.dart';
+import '../../feature/leave/presentation/controller/leave_controller.dart';
+import '../../feature/loan/presentation/page/loan_page.dart';
+import '../../feature/loan/presentation/page/apply_loan_page.dart';
+import '../../feature/loan/presentation/controller/loan_controller.dart';
+import '../../feature/lead_management/presentation/page/lead_management_page.dart';
+import '../../feature/lead_management/presentation/page/add_lead_page.dart';
+import '../../feature/lead_management/presentation/controller/lead_controller.dart';
+import '../../feature/hr_documents/presentation/page/hr_documents_page.dart';
+import '../../feature/hr_documents/presentation/controller/hr_documents_controller.dart';
+import '../../feature/okr/presentation/page/okr_page.dart';
+import '../../feature/okr/presentation/page/add_okr_page.dart';
+import '../../feature/okr/presentation/controller/okr_controller.dart';
+import '../../feature/my_team/presentation/page/my_team_page.dart';
+import '../../feature/my_team/presentation/controller/my_team_controller.dart';
+import '../../feature/field_tracking/presentation/page/field_tracking_page.dart';
+import '../../feature/field_tracking/presentation/controller/field_tracking_controller.dart';
+import '../../feature/profile/presentation/page/profile_page.dart';
+import '../../feature/profile/presentation/controller/profile_controller.dart';
 
 
 
@@ -41,17 +42,12 @@ class AppPages {
   static final pages = [
     GetPage(
       name: AppRoutes.splash,
-      page: () => SplashPage(),
+      page: () => const SplashPage(),
       binding: BindingsBuilder(() => Get.lazyPut(() => SplashController())),
     ),
     GetPage(
       name: AppRoutes.login,
-      page: () => const LoginPage(),
-      binding: BindingsBuilder(() => Get.lazyPut(() => AuthController(), fenix: true)),
-    ),
-    GetPage(
-      name: AppRoutes.forgotPassword,
-      page: () => const ForgotPasswordPage(),
+      page: () => LoginPage(),
       binding: BindingsBuilder(() => Get.lazyPut(() => AuthController(), fenix: true)),
     ),
 
@@ -59,7 +55,18 @@ class AppPages {
     GetPage(
       name: AppRoutes.dashboard,
       page: () => const DashboardPage(),
-      binding: BindingsBuilder(() => Get.lazyPut(() => DashboardController())),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => DashboardController(), fenix: true);
+        Get.lazyPut(() => HomeController(), fenix: true);
+        Get.lazyPut(() => AttendanceController(), fenix: true);
+        Get.lazyPut(() => FieldTrackingController(), fenix: true);
+        Get.lazyPut(() => MyTeamController(), fenix: true);
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.home,
+      page: () => const HomePage(),
+      binding: BindingsBuilder(() => Get.lazyPut(() => HomeController())),
     ),
     GetPage(
       name: AppRoutes.attendance,

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../app_theme/app_colors.dart';
 
 /// Provides const utility across the application.
 class AppConstants {
 
-  /// Hide keyboard method
+  // Horizontal space used frequently in the application
+  static const double hzSpace = 24.0;
+
+  // Vertical space used frequently in the application
+  static const double vtSpace = 60.0;
+
+  // Hides the keyboard when focus is outside the text field.
   static void hideKeyboard() {
     FocusManager.instance.primaryFocus?.unfocus();
   }
@@ -18,18 +23,5 @@ class AppConstants {
     } else {
       return HapticFeedback.vibrate();
     }
-  }
-
-  /// Set safe area color in view
-  static void setSafeArea({bool isDark = false}) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        systemNavigationBarColor: isDark ? AppColors.cBlack : AppColors.cWhite,
-        systemNavigationBarIconBrightness:
-            isDark ? Brightness.light : Brightness.dark,
-        statusBarIconBrightness:
-            isDark ? Brightness.light : Brightness.dark,
-      ),
-    );
   }
 }

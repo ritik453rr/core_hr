@@ -1,121 +1,85 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/routing/app_routes.dart';
+import 'package:core_hr/core/common_model/response_model.dart';
+import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:core_hr/core/storage/app_storage.dart';
+import 'package:core_hr/feature/auth/data/entity/login_entity.dart';
+import 'package:core_hr/feature/auth/data/model/login_model.dart';
+import 'package:core_hr/feature/auth/data/repository/auth_repo.dart';
+import 'package:flutter/foundation.dart';
+import '../../../../core/app_validator/app_validator.dart';
+
+/// IDs used for selective GetBuilder updates in Auth flow.
+enum AuthBuilderIds { passwordVisibility, loginButton }
 
 /// Unified AuthController managing Login and Forgot Password flows.
 class AuthController extends GetxController {
-  // --- LOGIN STATE & CONTROLLERS ---
-  final loginFormKey = GlobalKey<FormState>();
+  // Controllers.............
+
   final loginEmailController = TextEditingController();
   final loginPasswordController = TextEditingController();
-  final obscurePassword = true.obs;
-  final isLoginLoading = false.obs;
 
-  // --- FORGOT PASSWORD STATE & CONTROLLERS ---
-  var forgotStep = 0.obs; // 0: Enter Email, 1: Verify OTP, 2: New Password
-  final forgotEmailController = TextEditingController();
-  final otpController = TextEditingController();
-  final newPasswordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final isForgotLoading = false.obs;
-  final obscureNewPassword = true.obs;
-  final obscureConfirmPassword = true.obs;
+  // Instances
+  var authRepo = AuthRepo();
+
+  // Variables
+  bool obscurePassword = true;
+  bool isLoginLoading = false;
+  bool isLoginValid = false;
+  bool isLogoutLoading = false;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loginEmailController.addListener(validateForm);
+    loginPasswordController.addListener(validateForm);
+  }
+
+  @override
+  void onClose() {
+    loginEmailController.removeListener(validateForm);
+    loginPasswordController.removeListener(validateForm);
+    super.onClose();
+  }
+
+  static bool isValidEmail(String email) =>
+      AppValidator.validateEmail(email) == null;
+
+  void validateForm() {
+    final email = loginEmailController.text.trim();
+    final password = loginPasswordController.text;
+    isLoginValid =
+        AppValidator.validateEmail(email) == null &&
+        AppValidator.validateRequired(password, 'Password') == null;
+    update([AuthBuilderIds.loginButton]);
+  }
 
   // --- LOGIN METHODS ---
   void togglePasswordVisibility() {
     AppConstants.hapticFeedBack();
-    obscurePassword.value = !obscurePassword.value;
+    obscurePassword = !obscurePassword;
+    update([AuthBuilderIds.passwordVisibility]);
   }
 
-  String? validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Email is required";
+  /// Login method
+  Future<void> onTapLogin() async {
+    isLoginLoading = true;
+    update([AuthBuilderIds.loginButton]);
+    final loginEntity = LoginEntity(
+      email: loginEmailController.text.trim(),
+      password: loginPasswordController.text.trim(),
+    );
+    final ResponseModel resModel = await authRepo.login(
+      body: loginEntity.toJson(),
+    );
+    if (resModel.status) {
+      final LoginModel loginModel = resModel.data;
+      AppStorage.saveAuthToken(loginModel.token ?? "");
+      AppStorage.saveUserProfile(loginModel.user);
+      AppStorage.saveLoginStatus(true);
+      Get.offAllNamed(AppRoutes.dashboard);
+    } else {
+      AppToast.showToast(message: resModel.message);
     }
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(value.trim())) {
-      return "Please enter a valid email address";
-    }
-    return null;
-  }
-
-  String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Password is required";
-    }
-    if (value.length < 6) {
-      return "Password must be at least 6 characters long";
-    }
-    return null;
-  }
-
-  Future<void> login() async {
-    AppConstants.hideKeyboard();
-    AppConstants.hapticFeedBack();
-
-    isLoginLoading.value = true;
-    await Future.delayed(const Duration(milliseconds: 500));
-    isLoginLoading.value = false;
-
-    Get.offAllNamed(AppRoutes.dashboard);
-  }
-
-  // --- FORGOT PASSWORD METHODS ---
-  void sendOtp() async {
-    final email = forgotEmailController.text.trim();
-    if (email.isEmpty || !email.contains('@')) {
-      Get.snackbar('Invalid Email', 'Please enter a valid work email address.', snackPosition: SnackPosition.TOP);
-      return;
-    }
-
-    isForgotLoading.value = true;
-    await Future.delayed(const Duration(milliseconds: 600));
-    isForgotLoading.value = false;
-
-    forgotStep.value = 1;
-    Get.snackbar('OTP Sent', 'A 4-digit verification code was sent to $email.', snackPosition: SnackPosition.TOP);
-  }
-
-  void verifyOtp() async {
-    final otp = otpController.text.trim();
-    if (otp.length < 4) {
-      Get.snackbar('Invalid OTP', 'Please enter the 4-digit verification code.', snackPosition: SnackPosition.TOP);
-      return;
-    }
-
-    isForgotLoading.value = true;
-    await Future.delayed(const Duration(milliseconds: 600));
-    isForgotLoading.value = false;
-
-    forgotStep.value = 2;
-    Get.snackbar('OTP Verified', 'Please enter your new password.', snackPosition: SnackPosition.TOP);
-  }
-
-  void resetPassword() async {
-    final pass = newPasswordController.text;
-    final confirm = confirmPasswordController.text;
-
-    if (pass.length < 6) {
-      Get.snackbar('Weak Password', 'Password must be at least 6 characters long.', snackPosition: SnackPosition.TOP);
-      return;
-    }
-
-    if (pass != confirm) {
-      Get.snackbar('Password Mismatch', 'New password and confirmation do not match.', snackPosition: SnackPosition.TOP);
-      return;
-    }
-
-    isForgotLoading.value = true;
-    await Future.delayed(const Duration(milliseconds: 600));
-    isForgotLoading.value = false;
-
-    forgotStep.value = 0;
-    forgotEmailController.clear();
-    otpController.clear();
-    newPasswordController.clear();
-    confirmPasswordController.clear();
-
-    Get.snackbar('Password Updated', 'Your password has been reset successfully. Please login.', snackPosition: SnackPosition.TOP);
-    Get.offAllNamed(AppRoutes.login);
+    isLoginLoading = false;
+    update([AuthBuilderIds.loginButton]);
   }
 }
