@@ -10,8 +10,8 @@ class SplashController extends GetxController {
 
   void navigation() {
     Future.delayed(const Duration(seconds: 2), () {
-      final loginStatus = AppStorage.getLoginStatus();
-      Get.offAllNamed(loginStatus ? AppRoutes.dashboard : AppRoutes.login);
+      final isLoggedIn = AppStorage.getLoginStatus();
+      Get.offAllNamed(isLoggedIn ? AppRoutes.dashboard : AppRoutes.login);
     });
   }
 }

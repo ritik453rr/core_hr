@@ -60,6 +60,58 @@ class StringConstants {
   static const String kLiveLocationRecorded = "Live location recorded: ";
   static const String kWorkDurationCalculated = "Total work duration calculated.";
 
+  /// Attendance
+  static const String kAttendanceAndClockIn = "Attendance & Clock-In";
+  static const String kCapturedLiveLocation = "Captured Live Location";
+  static const String kGpsCoordinates = "GPS Coordinates: ";
+  static const String kTodaysShift = "Today's Shift";
+  static const String kInProgress = "In Progress";
+  static const String kNotClockedIn = "Not Clocked In";
+  static const String kClockIn = "Clock In";
+  static const String kClockOutNow = "CLOCK OUT NOW";
+  static const String kRecentAttendanceHistory = "Recent Attendance History";
+  static const String kUnknownLocation = "Unknown Location";
+
+  /// Navigation
+  static const String kHome = "Home";
+  static const String kAttendance = "Attendance";
+  static const String kTracking = "Tracking";
+  static const String kMyTeam = "My Team";
+
+  /// Profile
+  static const String kMyProfile = "My Profile";
+  static const String kDownloadIdCard = "Download ID Card";
+  static const String kEditProfileInfo = "Edit Profile Info";
+  static const String kPersonalAndEmploymentDetails =
+      "Personal & Employment Details";
+  static const String kAccountAndSecurityActions = "Account & Security Actions";
+  static const String kExperience = "Experience";
+  static const String kLeaveBal = "Leave Bal.";
+  static const String kActiveLoan = "Active Loan";
+  static const String kDepartment = "Department";
+  static const String kEmailAddress = "Email Address";
+  static const String kPhoneNumber = "Phone Number";
+  static const String kDateOfJoining = "Date of Joining";
+  static const String kWorkShift = "Work Shift";
+  static const String kReportingManager = "Reporting Manager";
+  static const String kOfficeLocation = "Office Location";
+  static const String kChangePassword = "Change Password";
+  static const String kSignOutOfAccount = "Sign Out of Account";
+  static const String kUpdatePasswordSubtitle =
+      "Update your password to keep your account secure.";
+  static const String kCurrentPassword = "Current Password";
+  static const String kNewPassword = "New Password";
+  static const String kConfirmNewPassword = "Confirm New Password";
+  static const String kPasswordMinLengthError =
+      "Password must be at least 6 characters";
+  static const String kPasswordMatchError = "Passwords do not match";
+  static const String kUpdatePassword = "Update Password";
+
+  /// Splash
+  static const String kAppTitle = "HR BOOK";
+  static const String kAppSubtitle = "Automating HR & Payroll Solutions";
+  static const String kAppVersionFooter = "Enterprise Core HR Platform • v1.0.0";
+
   /// Logout Dialog
   static const String kConfirmLogout = "Confirm Logout";
   static const String kLogoutConfirmationMessage =

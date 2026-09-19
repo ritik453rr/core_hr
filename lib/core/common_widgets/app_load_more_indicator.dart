@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../app_theme/app_colors.dart';
+import '../constants/app_colors.dart';
 
 /// A reusable loading indicator widget typically displayed at the bottom of lists during pagination/load-more.
 class AppLoadMoreIndicator extends StatelessWidget {

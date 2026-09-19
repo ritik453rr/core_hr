@@ -1,5 +1,6 @@
 import 'package:core_hr/core/constants/shared_imports.dart';
 
+/// A confirmation dialog shown when a user attempts to log out.
 class LogoutDialog extends StatelessWidget {
   final VoidCallback? onCancel;
   final VoidCallback? onConfirm;
@@ -28,19 +29,20 @@ class LogoutDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const Text(
         StringConstants.kConfirmLogout,
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: AppTextStyle.bold18,
       ),
       content: const Text(
         StringConstants.kLogoutConfirmationMessage,
+        style: AppTextStyle.regular14,
       ),
       actions: [
         AppTextButton(
           onPressed: onCancel ?? () => Get.back(),
           title: StringConstants.kCancel,
-          style: const TextStyle(color: Colors.grey),
+          style: AppTextStyle.regular14Grey,
         ),
         AppButton(
-          backgroundColor: const Color(0xFFEF4444),
+          backgroundColor: AppColors.cF87171,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           text: StringConstants.kLogout,
           onPressed: onConfirm,

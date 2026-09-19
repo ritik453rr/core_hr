@@ -1,25 +1,26 @@
 import 'package:core_hr/core/constants/shared_imports.dart';
 import '../controller/my_team_controller.dart';
 
-class MyTeamPage extends StatelessWidget {
+/// Page for managing team reportees and handling pending approvals for requests.
+class MyTeamPage extends GetView<MyTeamController> {
   const MyTeamPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(MyTeamController());
-
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC),
         appBar: AppBar(
-          title: const Text('My Team Management', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-          backgroundColor: const Color(0xFF0F172A),
+          title: const Text(
+            'My Team Management',
+            style: AppTextStyle.bold18White,
+          ),
+          backgroundColor: AppColors.c0F172A,
           iconTheme: const IconThemeData(color: Colors.white),
           bottom: const TabBar(
             indicatorColor: Color(0xFF38BDF8),
             labelColor: Colors.white,
-            unselectedLabelColor: Color(0xFF94A3B8),
+            unselectedLabelColor: AppColors.c94A3B8,
             tabs: [
               Tab(text: 'Team Reportees'),
               Tab(text: 'Pending Approvals'),
@@ -52,66 +53,82 @@ class MyTeamPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                          border: Border.all(color: AppColors.cE2E8F0),
                         ),
                         child: Row(
                           children: [
                             AppNetworkImage(
-                              imgUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100',
+                              imgUrl:
+                                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100',
                               width: 40,
                               height: 40,
                               borderRadius: 20,
                               placeholder: (context, url) => CircleAvatar(
-                                backgroundColor: const Color(0xFF0F172A),
+                                backgroundColor: AppColors.c0F172A,
                                 child: Text(
-                                  member.name.split(' ').map((n) => n[0]).join(''),
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  member.name
+                                      .split(' ')
+                                      .map((n) => n[0])
+                                      .join(''),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              errorWidget: (context, url, error) => CircleAvatar(
-                                backgroundColor: const Color(0xFF0F172A),
+                              errorWidget: (context, url, error) =>
+                                  CircleAvatar(
+                                backgroundColor: AppColors.c0F172A,
                                 child: Text(
-                                  member.name.split(' ').map((n) => n[0]).join(''),
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  member.name
+                                      .split(' ')
+                                      .map((n) => n[0])
+                                      .join(''),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(member.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                                const SizedBox(height: 2),
-                                Text(member.role, style: const TextStyle(color: Color(0xFF64748B), fontSize: 12)),
-                                const SizedBox(height: 4),
-                                Text('Location: ${member.location}', style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11)),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: isPresent
-                                  ? const Color(0xFFDCFCE7)
-                                  : isOnLeave
-                                      ? const Color(0xFFFEF3C7)
-                                      : const Color(0xFFF1F5F9),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              member.attendanceStatus,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: isPresent
-                                    ? const Color(0xFF166534)
-                                    : isOnLeave
-                                        ? const Color(0xFF92400E)
-                                        : const Color(0xFF475569),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(member.name, style: AppTextStyle.bold14),
+                                  const SizedBox(height: 2),
+                                  Text(member.role,
+                                      style: AppTextStyle.regular12Grey),
+                                  const SizedBox(height: 4),
+                                  Text('Location: ${member.location}',
+                                      style: AppTextStyle.regular11White60
+                                          .copyWith(color: AppColors.c94A3B8)),
+                                ],
                               ),
                             ),
-                          ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: isPresent
+                                    ? AppColors.cDCFCE7
+                                    : isOnLeave
+                                        ? AppColors.cFEF3C7
+                                        : AppColors.cF1F5F9,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                member.attendanceStatus,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: isPresent
+                                      ? AppColors.c166534
+                                      : isOnLeave
+                                          ? AppColors.c92400E
+                                          : AppColors.c475569,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       );
@@ -132,12 +149,13 @@ class MyTeamPage extends StatelessWidget {
                     separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final req = controller.pendingApprovals[index];
+                      final isApproved = req.status == 'Approved';
                       return Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                          border: Border.all(color: AppColors.cE2E8F0),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,9 +164,7 @@ class MyTeamPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(req.employeeName,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15)),
+                                    style: AppTextStyle.bold14),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 2),
@@ -161,7 +177,7 @@ class MyTeamPage extends StatelessWidget {
                                     style: const TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
-                                      color: Color(0xFF2563EB),
+                                      color: AppColors.c2563EB,
                                     ),
                                   ),
                                 ),
@@ -169,14 +185,12 @@ class MyTeamPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 6),
                             Text(req.details,
-                                style: const TextStyle(
-                                    color: Color(0xFF334155),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500)),
+                                style: AppTextStyle.regular13Grey
+                                    .copyWith(color: AppColors.c334155)),
                             const SizedBox(height: 4),
                             Text('Requested: ${req.date}',
-                                style: const TextStyle(
-                                    color: Color(0xFF94A3B8), fontSize: 11)),
+                                style: AppTextStyle.regular11White60
+                                    .copyWith(color: AppColors.c94A3B8)),
                             const SizedBox(height: 12),
                             Builder(builder: (context) {
                               if (req.status == 'Pending') {
@@ -185,8 +199,7 @@ class MyTeamPage extends StatelessWidget {
                                   children: [
                                     OutlinedButton(
                                       style: OutlinedButton.styleFrom(
-                                        foregroundColor:
-                                            const Color(0xFFDC2626),
+                                        foregroundColor: AppColors.cDC2626,
                                         side: const BorderSide(
                                             color: Color(0xFFFCA5A5)),
                                         shape: RoundedRectangleBorder(
@@ -201,7 +214,7 @@ class MyTeamPage extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 8),
                                     AppButton(
-                                      backgroundColor: const Color(0xFF16A34A),
+                                      backgroundColor: AppColors.c16A34A,
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16, vertical: 8),
                                       text: 'Approve',
@@ -215,9 +228,9 @@ class MyTeamPage extends StatelessWidget {
                                 'Decision: ${req.status}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: req.status == 'Approved'
-                                      ? const Color(0xFF16A34A)
-                                      : const Color(0xFFDC2626),
+                                  color: isApproved
+                                      ? AppColors.c16A34A
+                                      : AppColors.cDC2626,
                                 ),
                               );
                             }),

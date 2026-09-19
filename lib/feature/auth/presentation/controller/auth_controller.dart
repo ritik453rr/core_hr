@@ -4,16 +4,14 @@ import 'package:core_hr/core/storage/app_storage.dart';
 import 'package:core_hr/feature/auth/data/entity/login_entity.dart';
 import 'package:core_hr/feature/auth/data/model/login_model.dart';
 import 'package:core_hr/feature/auth/data/repository/auth_repo.dart';
-import 'package:flutter/foundation.dart';
 import '../../../../core/app_validator/app_validator.dart';
 
 /// IDs used for selective GetBuilder updates in Auth flow.
-enum AuthBuilderIds { passwordVisibility, loginButton }
+enum AuthBuilderIds { passwordVisibility, loginLoadingOverlay }
 
 /// Unified AuthController managing Login and Forgot Password flows.
 class AuthController extends GetxController {
   // Controllers.............
-
   final loginEmailController = TextEditingController();
   final loginPasswordController = TextEditingController();
 
@@ -21,35 +19,26 @@ class AuthController extends GetxController {
   var authRepo = AuthRepo();
 
   // Variables
-  bool obscurePassword = true;
-  bool isLoginLoading = false;
-  bool isLoginValid = false;
-  bool isLogoutLoading = false;
+  var obscurePassword = true;
+  var isLogging = false;
+  var isLoginValid = false;
+  var isLogoutLoading = false;
 
   @override
   void onInit() {
     super.onInit();
-    loginEmailController.addListener(validateForm);
-    loginPasswordController.addListener(validateForm);
+    loginEmailController.addListener(validateLoginForm);
+    loginPasswordController.addListener(validateLoginForm);
   }
 
-  @override
-  void onClose() {
-    loginEmailController.removeListener(validateForm);
-    loginPasswordController.removeListener(validateForm);
-    super.onClose();
-  }
-
-  static bool isValidEmail(String email) =>
-      AppValidator.validateEmail(email) == null;
-
-  void validateForm() {
+  /// Validates the login form and updates the login button state.
+  void validateLoginForm() {
     final email = loginEmailController.text.trim();
     final password = loginPasswordController.text;
     isLoginValid =
         AppValidator.validateEmail(email) == null &&
         AppValidator.validateRequired(password, 'Password') == null;
-    update([AuthBuilderIds.loginButton]);
+    update([AuthBuilderIds.loginLoadingOverlay]);
   }
 
   // --- LOGIN METHODS ---
@@ -59,10 +48,10 @@ class AuthController extends GetxController {
     update([AuthBuilderIds.passwordVisibility]);
   }
 
-  /// Login method
+  /// Authenticates the user with current credentials and redirects to the dashboard on success.
   Future<void> onTapLogin() async {
-    isLoginLoading = true;
-    update([AuthBuilderIds.loginButton]);
+    isLogging = true;
+    update([AuthBuilderIds.loginLoadingOverlay]);
     final loginEntity = LoginEntity(
       email: loginEmailController.text.trim(),
       password: loginPasswordController.text.trim(),
@@ -79,7 +68,7 @@ class AuthController extends GetxController {
     } else {
       AppToast.showToast(message: resModel.message);
     }
-    isLoginLoading = false;
-    update([AuthBuilderIds.loginButton]);
+    isLogging = false;
+    update([AuthBuilderIds.loginLoadingOverlay]);
   }
 }

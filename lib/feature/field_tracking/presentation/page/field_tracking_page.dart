@@ -1,18 +1,19 @@
 import 'package:core_hr/core/constants/shared_imports.dart';
 import '../controller/field_tracking_controller.dart';
 
-class FieldTrackingPage extends StatelessWidget {
+/// Page for monitoring field staff locations and status in real-time.
+class FieldTrackingPage extends GetView<FieldTrackingController> {
   const FieldTrackingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(FieldTrackingController());
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text('Field Staff Live Tracking', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        backgroundColor: const Color(0xFF0F172A),
+        title: const Text(
+          'Field Staff Live Tracking',
+          style: AppTextStyle.bold18White,
+        ),
+        backgroundColor: AppColors.c0F172A,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
@@ -30,10 +31,10 @@ class FieldTrackingPage extends StatelessWidget {
               // Simulated Map View Graphic Container
               Container(
                 height: 160,
-                width: double.infinity,
+                width: Get.width,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF0284C7), Color(0xFF0369A1)],
+                    colors: [AppColors.c0284C7, Color(0xFF0369A1)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -45,26 +46,29 @@ class FieldTrackingPage extends StatelessWidget {
                         opacity: 0.15,
                         child: GridView.builder(
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 6),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 6),
                           itemCount: 24,
-                          itemBuilder: (context, index) => Container(decoration: BoxDecoration(border: Border.all(color: Colors.white))),
+                          itemBuilder: (context, index) => Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.white))),
                         ),
                       ),
                     ),
-                    Center(
+                    const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.explore, color: Colors.white, size: 40),
-                          const SizedBox(height: 6),
-                          const Text(
-                            'LIVE SATELLITE GPS ACTIVE',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.2, fontSize: 13),
-                          ),
-                          const SizedBox(height: 4),
+                          Icon(Icons.explore, color: Colors.white, size: 40),
+                          SizedBox(height: 6),
                           Text(
-                            'Tracking ${controller.fieldStaffList.length} Active Field Officers',
-                            style: const TextStyle(color: Colors.white70, fontSize: 11),
+                            'LIVE SATELLITE GPS ACTIVE',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
+                                fontSize: 13),
                           ),
                         ],
                       ),
@@ -96,7 +100,8 @@ class FieldTrackingPage extends StatelessWidget {
                   builder: (context) {
                     final list = controller.filteredStaff;
                     if (list.isEmpty) {
-                      return const Center(child: Text('No field staff match filter.'));
+                      return const Center(
+                          child: Text('No field staff match filter.'));
                     }
                     return ListView.separated(
                       padding: const EdgeInsets.all(16),
@@ -112,7 +117,7 @@ class FieldTrackingPage extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                            border: Border.all(color: AppColors.cE2E8F0),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,29 +127,39 @@ class FieldTrackingPage extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      CircleAvatar(
+                                      const CircleAvatar(
                                         radius: 16,
-                                        backgroundColor: const Color(0xFF0F172A),
-                                        child: Text(staff.staffName[0], style: const TextStyle(color: Colors.white, fontSize: 13)),
+                                        backgroundColor: AppColors.c0F172A,
+                                        child: Icon(Icons.person,
+                                            color: Colors.white, size: 18),
                                       ),
                                       const SizedBox(width: 10),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Text(staff.staffName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                                          Text('${staff.designation} (${staff.staffId})', style: const TextStyle(color: Color(0xFF64748B), fontSize: 11)),
+                                          Text(staff.staffName,
+                                              style: AppTextStyle.bold14),
+                                          Text(
+                                              '${staff.designation} (${staff.staffId})',
+                                              style:
+                                                  AppTextStyle.regular11White60
+                                                      .copyWith(
+                                                          color: AppColors
+                                                              .c64748B)),
                                         ],
                                       ),
                                     ],
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: isActive
-                                          ? const Color(0xFFDCFCE7)
+                                          ? AppColors.cDCFCE7
                                           : isIdle
-                                              ? const Color(0xFFFEF3C7)
-                                              : const Color(0xFFF1F5F9),
+                                              ? AppColors.cFEF3C7
+                                              : AppColors.cF1F5F9,
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
@@ -153,10 +168,10 @@ class FieldTrackingPage extends StatelessWidget {
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                         color: isActive
-                                            ? const Color(0xFF166534)
+                                            ? AppColors.c166534
                                             : isIdle
-                                                ? const Color(0xFF92400E)
-                                                : const Color(0xFF475569),
+                                                ? AppColors.c92400E
+                                                : AppColors.c4B5563,
                                       ),
                                     ),
                                   ),
@@ -166,12 +181,13 @@ class FieldTrackingPage extends StatelessWidget {
 
                               Row(
                                 children: [
-                                  const Icon(Icons.location_on, size: 16, color: Color(0xFF0284C7)),
+                                  const Icon(Icons.location_on,
+                                      size: 16, color: AppColors.c0284C7),
                                   const SizedBox(width: 6),
                                   Expanded(
                                     child: Text(
                                       staff.currentArea,
-                                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(0xFF1E293B)),
+                                      style: AppTextStyle.semiBold14,
                                     ),
                                   ),
                                 ],
@@ -179,7 +195,9 @@ class FieldTrackingPage extends StatelessWidget {
                               const SizedBox(height: 4),
                               Padding(
                                 padding: const EdgeInsets.only(left: 22.0),
-                                child: Text('Coordinates: ${staff.latLong}', style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11)),
+                                child: Text('Coordinates: ${staff.latLong}',
+                                    style: AppTextStyle.regular11White60
+                                        .copyWith(color: AppColors.c94A3B8)),
                               ),
                               const SizedBox(height: 8),
 
@@ -188,12 +206,18 @@ class FieldTrackingPage extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      const Icon(Icons.battery_std, size: 14, color: Color(0xFF16A34A)),
+                                      const Icon(Icons.battery_std,
+                                          size: 14, color: AppColors.c16A34A),
                                       const SizedBox(width: 4),
-                                      Text('Battery: ${staff.batteryLevel}', style: const TextStyle(color: Color(0xFF64748B), fontSize: 11)),
+                                      Text('Battery: ${staff.batteryLevel}',
+                                          style: AppTextStyle.regular11White60
+                                              .copyWith(
+                                                  color: AppColors.c64748B)),
                                     ],
                                   ),
-                                  Text('Last Ping: ${staff.lastPingTime}', style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11)),
+                                  Text('Last Ping: ${staff.lastPingTime}',
+                                      style: AppTextStyle.regular11White60
+                                          .copyWith(color: AppColors.c94A3B8)),
                                 ],
                               ),
                             ],
@@ -214,10 +238,13 @@ class FieldTrackingPage extends StatelessWidget {
   Widget _filterChip(FieldTrackingController controller, String label) {
     final selected = controller.selectedFilter == label;
     return ChoiceChip(
-      label: Text(label, style: TextStyle(color: selected ? Colors.white : const Color(0xFF475569), fontSize: 12)),
+      label: Text(label,
+          style: TextStyle(
+              color: selected ? Colors.white : AppColors.c475569,
+              fontSize: 12)),
       selected: selected,
-      selectedColor: const Color(0xFF0F172A),
-      backgroundColor: const Color(0xFFF1F5F9),
+      selectedColor: AppColors.c0F172A,
+      backgroundColor: AppColors.cF1F5F9,
       onSelected: (_) => controller.setFilter(label),
     );
   }

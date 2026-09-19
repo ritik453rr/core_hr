@@ -18,8 +18,6 @@ class AppButton extends StatelessWidget {
   final double? width;
   final double? height;
   final TextStyle? textStyle;
-  final IconData? icon;
-  final double iconSize;
 
   const AppButton({
     super.key,
@@ -37,8 +35,6 @@ class AppButton extends StatelessWidget {
     this.width,
     this.height,
     this.textStyle,
-    this.icon,
-    this.iconSize = 20.0,
   });
 
   @override
@@ -55,25 +51,16 @@ class AppButton extends StatelessWidget {
             ),
           )
         : (child ??
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (text != null)
-                  Text(
+            (text != null
+                ? Text(
                     text!,
                     style: textStyle ??
                         const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
-                  ),
-                if (icon != null) ...[
-                  if (text != null) const SizedBox(width: 8),
-                  Icon(icon, size: iconSize),
-                ],
-              ],
-            ));
+                  )
+                : const SizedBox.shrink()));
 
     final Widget elevatedButton = ElevatedButton(
       style: ElevatedButton.styleFrom(

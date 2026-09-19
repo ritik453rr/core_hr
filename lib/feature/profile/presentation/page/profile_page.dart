@@ -1,34 +1,30 @@
 import 'package:core_hr/core/constants/shared_imports.dart';
 import '../controller/profile_controller.dart';
 
+/// User profile page displaying detailed employee information and account settings.
 class ProfilePage extends GetView<ProfileController> {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F5F9),
       appBar: AppBar(
         title: const Text(
-          'My Profile',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
+          StringConstants.kMyProfile,
+          style: AppTextStyle.bold18White,
         ),
-        backgroundColor: const Color(0xFF0F172A),
+        backgroundColor: AppColors.c0F172A,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             icon: const Icon(Icons.badge_outlined, color: Colors.white),
-            tooltip: 'Download ID Card',
+            tooltip: StringConstants.kDownloadIdCard,
             onPressed: controller.downloadIdCard,
           ),
           IconButton(
             icon: const Icon(Icons.edit_outlined, color: Colors.white),
-            tooltip: 'Edit Profile Info',
+            tooltip: StringConstants.kEditProfileInfo,
             onPressed: controller.editProfileInfo,
           ),
           const SizedBox(width: 8),
@@ -52,12 +48,8 @@ class ProfilePage extends GetView<ProfileController> {
 
                 // --- Work & Personal Details ---
                 const Text(
-                  'Personal & Employment Details',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0F172A),
-                  ),
+                  StringConstants.kPersonalAndEmploymentDetails,
+                  style: AppTextStyle.bold16,
                 ),
                 const SizedBox(height: 12),
                 _buildInfoCard(controller),
@@ -65,12 +57,8 @@ class ProfilePage extends GetView<ProfileController> {
 
                 // --- Account Actions ---
                 const Text(
-                  'Account & Security Actions',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0F172A),
-                  ),
+                  StringConstants.kAccountAndSecurityActions,
+                  style: AppTextStyle.bold16,
                 ),
                 const SizedBox(height: 12),
                 _buildActionsCard(controller),
@@ -85,17 +73,18 @@ class ProfilePage extends GetView<ProfileController> {
 
   Widget _buildProfileHeaderCard(ProfileController controller) {
     return Container(
+      width: Get.width,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF0F172A), Color(0xFF1E3A8A)],
+          colors: [AppColors.c0F172A, AppColors.c1E3A8A],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E3A8A).withValues(alpha: 0.25),
+            color: AppColors.c1E3A8A.withValues(alpha: 0.25),
             blurRadius: 14,
             offset: const Offset(0, 5),
           ),
@@ -117,19 +106,21 @@ class ProfilePage extends GetView<ProfileController> {
                   ],
                 ),
                 child: AppNetworkImage(
-                  imgUrl:
-                      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+                  imgUrl: controller.profileImageUrl,
                   width: 72,
                   height: 72,
                   borderRadius: 36,
                   placeholder: (context, url) => Container(
                     width: 72,
                     height: 72,
-                    color: const Color(0xFF2563EB),
-                    child: const Center(
+                    decoration: const BoxDecoration(
+                      color: AppColors.c2563EB,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
                       child: Text(
-                        'AM',
-                        style: TextStyle(
+                        controller.employeeInitials,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
                           fontSize: 24,
@@ -140,11 +131,14 @@ class ProfilePage extends GetView<ProfileController> {
                   errorWidget: (context, url, error) => Container(
                     width: 72,
                     height: 72,
-                    color: const Color(0xFF2563EB),
-                    child: const Center(
+                    decoration: const BoxDecoration(
+                      color: AppColors.c2563EB,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
                       child: Text(
-                        'AM',
-                        style: TextStyle(
+                        controller.employeeInitials,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
                           fontSize: 24,
@@ -160,21 +154,14 @@ class ProfilePage extends GetView<ProfileController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      controller.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      controller.employeeName,
+                      style: AppTextStyle.bold18White,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      controller.role,
-                      style: const TextStyle(
-                        color: Color(0xFF93C5FD),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      controller.employeeRole,
+                      style: AppTextStyle.medium13Blue
+                          .copyWith(color: AppColors.c93C5FD),
                     ),
                     const SizedBox(height: 8),
                     Container(
@@ -190,13 +177,8 @@ class ProfilePage extends GetView<ProfileController> {
                         ),
                       ),
                       child: Text(
-                        controller.empId,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
+                        controller.employeeId,
+                        style: AppTextStyle.bold11White,
                       ),
                     ),
                   ],
@@ -214,28 +196,28 @@ class ProfilePage extends GetView<ProfileController> {
       children: [
         Expanded(
           child: _statTile(
-            'Experience',
+            StringConstants.kExperience,
             controller.totalExperience,
             Icons.work_history_rounded,
-            const Color(0xFF2563EB),
+            AppColors.c2563EB,
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _statTile(
-            'Leave Bal.',
+            StringConstants.kLeaveBal,
             controller.leaveBalance,
             Icons.event_available_rounded,
-            const Color(0xFF10B981),
+            AppColors.c10B981,
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _statTile(
-            'Active Loan',
+            StringConstants.kActiveLoan,
             controller.activeLoan,
             Icons.account_balance_rounded,
-            const Color(0xFFD97706),
+            AppColors.cD97706,
           ),
         ),
       ],
@@ -248,7 +230,7 @@ class ProfilePage extends GetView<ProfileController> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: AppColors.cE2E8F0),
       ),
       child: Column(
         children: [
@@ -256,20 +238,12 @@ class ProfilePage extends GetView<ProfileController> {
           const SizedBox(height: 6),
           Text(
             title,
-            style: const TextStyle(
-              color: Color(0xFF64748B),
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyle.semiBold11Grey,
           ),
           const SizedBox(height: 2),
           Text(
             value,
-            style: const TextStyle(
-              color: Color(0xFF0F172A),
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyle.bold14,
           ),
         ],
       ),
@@ -278,48 +252,50 @@ class ProfilePage extends GetView<ProfileController> {
 
   Widget _buildInfoCard(ProfileController controller) {
     return Container(
+      width: Get.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: AppColors.cE2E8F0),
       ),
       child: Column(
         children: [
           _infoTile(
             Icons.business_rounded,
-            'Department',
+            StringConstants.kDepartment,
             controller.department,
           ),
           const Divider(height: 1, indent: 50, endIndent: 16),
           _infoTile(
             Icons.mail_outline_rounded,
-            'Email Address',
+            StringConstants.kEmailAddress,
             controller.email,
           ),
           const Divider(height: 1, indent: 50, endIndent: 16),
           _infoTile(
             Icons.phone_iphone_rounded,
-            'Phone Number',
+            StringConstants.kPhoneNumber,
             controller.phone,
           ),
           const Divider(height: 1, indent: 50, endIndent: 16),
           _infoTile(
             Icons.calendar_today_rounded,
-            'Date of Joining',
+            StringConstants.kDateOfJoining,
             controller.joiningDate,
           ),
           const Divider(height: 1, indent: 50, endIndent: 16),
-          _infoTile(Icons.schedule_rounded, 'Work Shift', controller.workShift),
+          _infoTile(Icons.schedule_rounded, StringConstants.kWorkShift,
+              controller.workShift),
           const Divider(height: 1, indent: 50, endIndent: 16),
           _infoTile(
             Icons.supervisor_account_rounded,
-            'Reporting Manager',
+            StringConstants.kReportingManager,
             controller.manager,
           ),
           const Divider(height: 1, indent: 50, endIndent: 16),
           _infoTile(
             Icons.location_on_outlined,
-            'Office Location',
+            StringConstants.kOfficeLocation,
             controller.location,
             isLast: true,
           ),
@@ -338,7 +314,7 @@ class ProfilePage extends GetView<ProfileController> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
-          Icon(icon, color: const Color(0xFF2563EB), size: 22),
+          Icon(icon, color: AppColors.c2563EB, size: 22),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -346,20 +322,12 @@ class ProfilePage extends GetView<ProfileController> {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
-                    color: Color(0xFF64748B),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: AppTextStyle.semiBold11Grey,
                 ),
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: const TextStyle(
-                    color: Color(0xFF0F172A),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyle.semiBold14,
                 ),
               ],
             ),
@@ -370,41 +338,39 @@ class ProfilePage extends GetView<ProfileController> {
   }
 
   Widget _buildActionsCard(ProfileController controller) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        side: const BorderSide(color: AppColors.cE2E8F0),
       ),
       child: Column(
         children: [
           ListTile(
-            leading: const Icon(Icons.badge_rounded, color: Color(0xFF0284C7)),
+            leading:
+                const Icon(Icons.lock_reset_rounded, color: AppColors.c0284C7),
             title: const Text(
-              'Download Employee ID Card',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            trailing: const Icon(
-              Icons.download_rounded,
-              color: Color(0xFF94A3B8),
-              size: 20,
-            ),
-            onTap: controller.downloadIdCard,
-          ),
-          const Divider(height: 1, indent: 50, endIndent: 16),
-          ListTile(
-            leading: const Icon(Icons.logout_rounded, color: Color(0xFFDC2626)),
-            title: const Text(
-              'Sign Out of Account',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFFDC2626),
-              ),
+              StringConstants.kChangePassword,
+              style: AppTextStyle.semiBold14,
             ),
             trailing: const Icon(
               Icons.chevron_right_rounded,
-              color: Color(0xFFDC2626),
+              color: AppColors.c94A3B8,
+              size: 20,
+            ),
+            onTap: () => Get.toNamed(AppRoutes.changePassword),
+          ),
+          const Divider(height: 1, indent: 50, endIndent: 16),
+          ListTile(
+            leading: const Icon(Icons.logout_rounded, color: AppColors.cDC2626),
+            title: const Text(
+              StringConstants.kSignOutOfAccount,
+              style: AppTextStyle.semiBold14Grey,
+            ),
+            trailing: const Icon(
+              Icons.chevron_right_rounded,
+              color: AppColors.cDC2626,
             ),
             onTap: controller.logout,
           ),

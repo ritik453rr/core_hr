@@ -1,6 +1,6 @@
 import 'package:core_hr/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:core_hr/core/app_theme/app_colors.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
 
 /// A reusable custom text field widget with label, validation, custom borders, icons, and styling options.
 class AppTextField extends StatelessWidget {

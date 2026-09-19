@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:core_hr/core/common_model/common_user_model.dart';
 
-LoginModel loginModelFromJson(String str) => LoginModel.fromJson(json.decode(str));
+LoginModel loginModelFromJson(Map<String, dynamic> json) => LoginModel.fromJson(json);
 
 String loginModelToJson(LoginModel data) => json.encode(data.toJson());
 

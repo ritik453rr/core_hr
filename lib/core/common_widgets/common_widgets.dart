@@ -2,7 +2,7 @@
 library;
 
 export 'app_button.dart';
-export 'app_circular_indicator.dart';
+export 'app_loading_indicator.dart';
 export 'app_load_more_indicator.dart';
 export 'app_network_image.dart';
 export 'app_refresh_indicator.dart';

@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:core_hr/core/constants/app_keys.dart';
-import 'package:core_hr/core/routing/app_routes.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get.dart' hide FormData, MultipartFile;
-import '../../common_widgets/app_toast.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile, Response;
 import '../../global/global.dart';
 import '../../language/string_constants.dart';
 import '../../storage/app_storage.dart';
@@ -53,6 +50,23 @@ class ApiService {
     );
   }
 
+  /// Helper to handle response status consistently
+  ResponseModel _handleResponse(Response response, dynamic model) {
+    // If API provides a "success" or "status" field, use it, otherwise rely on statusCode
+    final dynamic responseData = response.data;
+    bool isSuccess = (response.statusCode == 200 || response.statusCode == 201);
+    
+    if (responseData is Map && responseData.containsKey('success')) {
+       isSuccess = isSuccess && (responseData['success'] == true);
+    }
+
+    return ResponseModel(
+      status: isSuccess,
+      data: model != null && isSuccess ? model(responseData) : responseData,
+      message: responseData is Map ? (responseData['message'] ?? "") : "",
+    );
+  }
+
   /// Sends a POST request using Dio and returns a standardized ResponseModel with success, data, and error handling.
   Future<ResponseModel> postRequest({
     required String url,
@@ -73,38 +87,9 @@ class ApiService {
         options: options,
         cancelToken: cancelToken,
       );
-      if ((response.statusCode == 200 || response.statusCode == 201)) {
-        return ResponseModel(
-          status: true,
-          data: model != null
-              ? model(jsonEncode(response.data))
-              : response.data,
-          message: response.data['message'] ?? "",
-        );
-      } else {
-        return ResponseModel(
-          status: false,
-          message: response.data['message'] ?? "",
-        );
-      }
+      return _handleResponse(response, model);
     } on DioException catch (e) {
-      if (CancelToken.isCancel(e)) {
-        return ResponseModel();
-      }
-      if (e.response != null) {
-        final data = e.response!.data;
-        final defaultMsg = ApiConstants.getApiErrorMsg(e.response!.statusCode);
-        return ResponseModel(
-          message: data is String
-              ? defaultMsg
-              : (data?["message"] ?? defaultMsg),
-        );
-      } else {
-        return ResponseModel(
-          status: false,
-          message: StringConstants.kServerNotFound.tr,
-        );
-      }
+      return _handleDioError(e);
     } catch (e) {
       return ResponseModel(status: false, message: e.toString());
     }
@@ -125,35 +110,9 @@ class ApiService {
         queryParameters: queryParameters,
         options: options,
       );
-
-      if ((response.statusCode == 200 || response.statusCode == 201) &&
-          response.data["success"]) {
-        return ResponseModel(
-          status: true,
-          data: response.data,
-          message: response.data['message'] ?? "",
-        );
-      } else {
-        return ResponseModel(
-          status: false,
-          message: response.data['message'] ?? "",
-        );
-      }
+      return _handleResponse(response, null);
     } on DioException catch (e) {
-      if (e.response != null) {
-        final data = e.response!.data;
-        final defaultMsg = ApiConstants.getApiErrorMsg(e.response!.statusCode);
-        return ResponseModel(
-          message: data is String
-              ? defaultMsg
-              : (data?["message"] ?? defaultMsg),
-        );
-      } else {
-        return ResponseModel(
-          status: false,
-          message: StringConstants.kServerNotFound.tr,
-        );
-      }
+      return _handleDioError(e);
     } catch (e) {
       return ResponseModel(status: false, message: e.toString());
     }
@@ -198,37 +157,9 @@ class ApiService {
               },
             ),
       );
-
-      if ((response.statusCode == 200 || response.statusCode == 201) &&
-          response.data["success"]) {
-        return ResponseModel(
-          status: true,
-          message: response.data["message"] ?? "",
-          data: model != null
-              ? model(jsonEncode(response.data))
-              : response.data,
-        );
-      } else {
-        return ResponseModel(message: response.data["message"] ?? "");
-      }
+      return _handleResponse(response, model);
     } on DioException catch (e) {
-      if (CancelToken.isCancel(e)) {
-        return ResponseModel();
-      }
-      if (e.response != null) {
-        final data = e.response!.data;
-        final defaultMsg = ApiConstants.getApiErrorMsg(e.response!.statusCode);
-        return ResponseModel(
-          message: data is String
-              ? defaultMsg
-              : (data?["message"] ?? defaultMsg),
-        );
-      } else {
-        return ResponseModel(
-          status: false,
-          message: StringConstants.kServerNotFound.tr,
-        );
-      }
+      return _handleDioError(e);
     } catch (e) {
       return ResponseModel(status: false, message: e.toString());
     }
@@ -246,38 +177,31 @@ class ApiService {
     }
     try {
       final response = await dio.get(url, queryParameters: queryParameters);
-      if ((response.statusCode == 200 || response.statusCode == 201) &&
-          response.data["success"]) {
-        return ResponseModel(
-          status: true,
-          data: model != null
-              ? model(jsonEncode(response.data))
-              : response.data,
-          message: response.data['message'] ?? "",
-        );
-      } else {
-        return ResponseModel(
-          status: false,
-          message: response.data['message'] ?? "",
-        );
-      }
+      return _handleResponse(response, model);
     } on DioException catch (e) {
-      if (e.response != null) {
-        final data = e.response!.data;
-        final defaultMsg = ApiConstants.getApiErrorMsg(e.response!.statusCode);
-        return ResponseModel(
-          message: data is String
-              ? defaultMsg
-              : (data?["message"] ?? defaultMsg),
-        );
-      } else {
-        return ResponseModel(
-          status: false,
-          message: StringConstants.kServerNotFound.tr,
-        );
-      }
+      return _handleDioError(e);
     } catch (e) {
       return ResponseModel(status: false, message: e.toString());
+    }
+  }
+
+  ResponseModel _handleDioError(DioException e) {
+    if (CancelToken.isCancel(e)) {
+      return ResponseModel();
+    }
+    if (e.response != null) {
+      final data = e.response!.data;
+      final defaultMsg = ApiConstants.getApiErrorMsg(e.response!.statusCode);
+      return ResponseModel(
+        status: false,
+        message: data is Map ? (data["message"] ?? defaultMsg) : defaultMsg,
+        data: data,
+      );
+    } else {
+      return ResponseModel(
+        status: false,
+        message: StringConstants.kServerNotFound.tr,
+      );
     }
   }
 }

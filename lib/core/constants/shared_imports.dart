@@ -10,7 +10,8 @@ export 'package:flutter/material.dart';
 export 'package:get/get.dart';
 
 // App theme
-export 'package:core_hr/core/app_theme/app_colors.dart';
+export 'package:core_hr/core/constants/app_colors.dart';
+export 'package:core_hr/core/constants/app_text_style.dart';
 
 // Constants
 export 'package:core_hr/core/constants/app_constants.dart';

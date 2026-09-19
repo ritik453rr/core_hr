@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../app_theme/app_colors.dart';
+import '../constants/app_colors.dart';
 
 /// A reusable pull-to-refresh indicator wrapper widget.
 class AppRefreshIndicator extends StatelessWidget {
