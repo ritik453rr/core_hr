@@ -1,30 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import '../constants/app_colors.dart';
 
 /// A customizable circular loading indicator.
 class AppLoadingIndicator extends StatelessWidget {
   final Color color;
-  final double strokeWidth;
-  final double? value;
-  final Color? backgroundColor;
+  final double radius;
 
+  /// Creates an [AppLoadingIndicator] with customizable [color], [strokeWidth], and [radius].
   const AppLoadingIndicator({
     super.key,
     this.color = AppColors.c2563EB,
-    this.strokeWidth = 3.0,
-    this.value,
-    this.backgroundColor,
+    this.radius = 20,
   });
 
+  /// Builds a circular loading indicator constrained by the specified [radius].
   @override
   Widget build(BuildContext context) {
-    return CircularProgressIndicator(
-      color: color,
-      strokeWidth: strokeWidth,
-      value: value,
-      backgroundColor: backgroundColor,
-    );
+    return CupertinoActivityIndicator(color: color, radius: radius);
   }
 }
-
-typedef AppCircularProgressIndicator = AppLoadingIndicator;

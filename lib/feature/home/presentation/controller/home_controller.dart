@@ -1,14 +1,29 @@
 import 'package:core_hr/core/constants/shared_imports.dart';
-import 'package:core_hr/core/services/location_service.dart';
+import 'package:core_hr/core/services/api_service/api_service.dart';
+import 'package:core_hr/core/services/location_service/location_service.dart';
+import 'package:core_hr/feature/home/data/entity/check_in_entity.dart';
+import 'package:core_hr/feature/home/data/repository/home_repo.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
-enum HomeBuilderIds { home, clockIn, metrics }
+import '../../../../core/common_model/response_model.dart';
+
+enum HomeBuilderIds { clockIn }
 
 /// Controller for managing home page state and consolidated attendance logic.
 class HomeController extends GetxController {
+  // Instances.......
+  final _geocoding = Geocoding();
+  final _homeRepo = HomeRepo();
+  Position? _position;
+
   // Consolidated Attendance State
-  bool isClockedIn = false;
+  bool isCheckIn = false;
   bool isLoadingLatLong = false;
+  bool isClockInLoading = false;
+
   String currentLatLong = 'Unknown';
+  String currentAddress = 'Unknown';
 
   @override
   void onInit() {
@@ -16,17 +31,36 @@ class HomeController extends GetxController {
     getLatLang();
   }
 
-  /// Fetches the current latitude and longitude.
+  /// Fetches the current latitude, longitude, and address.
   Future<void> getLatLang() async {
     isLoadingLatLong = true;
     update([HomeBuilderIds.clockIn]);
+
     try {
-      final position = await LocationService.getCurrentPosition();
-      if (position != null) {
-        currentLatLong =
-            'Lat: ${position.latitude.toStringAsFixed(6)}, Long: ${position.longitude.toStringAsFixed(6)}';
+      _position = await LocationService.getCurrentPosition();
+
+      if (_position == null) {
+        return;
+      }
+
+      final latitude = _position!.latitude;
+      final longitude = _position!.longitude;
+
+      // Convert fetched coordinates into address.
+      final List<Placemark> placemarks = await _geocoding
+          .placemarkFromCoordinates(latitude, longitude);
+
+      if (placemarks.isNotEmpty) {
+        final Placemark place = placemarks.first;
+        currentAddress = [
+          place.street,
+          place.subLocality,
+          place.postalCode,
+          place.country,
+        ].where((value) => value != null && value.trim().isNotEmpty).join(', ');
       }
     } catch (e) {
+      debugPrint('Location error: $e');
       AppToast.showToast(message: e.toString());
     } finally {
       isLoadingLatLong = false;
@@ -39,13 +73,35 @@ class HomeController extends GetxController {
   }
 
   /// Toggles the clock-in status.
-  void toggleClockIn() {
-    isClockedIn = !isClockedIn;
+  Future<void> toggleClockIn() async {
+    if (_position == null) {
+      AppToast.showToast(message: 'Unable to fetch your current location.');
+      return;
+    }
+
+    checkInCheckOut();
+  }
+
+  /// Performs the check-in or check-out operation via the repository.
+  Future<void> checkInCheckOut() async {
+    isClockInLoading = true;
     update([HomeBuilderIds.clockIn]);
-    AppToast.showToast(
-      message: isClockedIn ? 'Clocked in successfully!' : 'Clocked out successfully!',
-      isSuccess: true,
+    final checkInEntity = CheckInEntity(
+      latitude: _position!.latitude,
+      longitude: _position!.longitude,
+      address: currentAddress,
     );
+    final ResponseModel responseModel = await _homeRepo.checkInCheckOut(
+      entity: checkInEntity,
+      isCheckIn: isCheckIn,
+    );
+    if (responseModel.status) {
+      isCheckIn = !isCheckIn;
+    } else {
+      AppToast.showToast(message: responseModel.message);
+    }
+    isClockInLoading = false;
+    update([HomeBuilderIds.clockIn]);
   }
 
   /// Handles tap on HR service modules.

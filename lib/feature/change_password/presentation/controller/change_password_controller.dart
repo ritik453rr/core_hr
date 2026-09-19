@@ -33,7 +33,7 @@ class ChangePasswordController extends GetxController {
       );
 
       final response = await ApiService().postRequest(
-        url: ApiEndPoints.changePassword,
+        endpoint: ApiEndPoints.changePassword,
         body: requestEntity.toJson(),
       );
 

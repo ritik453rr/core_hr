@@ -5,21 +5,11 @@ class LogoutDialog extends StatelessWidget {
   final VoidCallback? onCancel;
   final VoidCallback? onConfirm;
 
-  const LogoutDialog({
-    super.key,
-    this.onCancel,
-    this.onConfirm,
-  });
+  const LogoutDialog({super.key, this.onCancel, this.onConfirm});
 
-  static Future<T?> show<T>({
-    VoidCallback? onCancel,
-    VoidCallback? onConfirm,
-  }) {
+  static Future<T?> show<T>({VoidCallback? onCancel, VoidCallback? onConfirm}) {
     return Get.dialog<T>(
-      LogoutDialog(
-        onCancel: onCancel,
-        onConfirm: onConfirm,
-      ),
+      LogoutDialog(onCancel: onCancel, onConfirm: onConfirm),
     );
   }
 
@@ -41,12 +31,7 @@ class LogoutDialog extends StatelessWidget {
           title: StringConstants.kCancel,
           style: AppTextStyle.regular14Grey,
         ),
-        AppButton(
-          backgroundColor: AppColors.cF87171,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          text: StringConstants.kLogout,
-          onPressed: onConfirm,
-        ),
+        AppButton(title: StringConstants.kLogout, onPressed: onConfirm),
       ],
     );
   }

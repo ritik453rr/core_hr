@@ -16,11 +16,7 @@ class SplashPage extends StatelessWidget {
         height: Get.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              AppColors.c0F172A,
-              AppColors.c1E3A8A,
-              AppColors.c0284C7,
-            ],
+            colors: [AppColors.c0F172A, AppColors.c1E3A8A, AppColors.c0284C7],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -29,7 +25,7 @@ class SplashPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(height: 40),
+              40.h,
 
               // Middle Logo and Branding
               Column(
@@ -37,19 +33,21 @@ class SplashPage extends StatelessWidget {
                 children: [
                   // Logo Container with glowing effect & subtle border
                   const SplashLogoWidget(),
-                  const SizedBox(height: 28),
+                  28.h,
 
                   // App Title
                   const Text(
                     StringConstants.kAppTitle,
                     style: AppTextStyle.bold32White,
                   ),
-                  const SizedBox(height: 10),
+                  10.h,
 
                   // Subtitle
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(20),
@@ -66,20 +64,13 @@ class SplashPage extends StatelessWidget {
               ),
 
               // Bottom Loading Indicator & Version Footer
-              const Padding(
-                padding: EdgeInsets.only(bottom: 24.0),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 24.0),
                 child: Column(
                   children: [
-                    SizedBox(
-                      width: 28,
-                      height: 28,
-                      child: AppLoadingIndicator(
-                        color: AppColors.c38BDF8,
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Text(
+                    const AppLoadingIndicator(color: AppColors.c38BDF8),
+                    20.h,
+                    const Text(
                       StringConstants.kAppVersionFooter,
                       style: AppTextStyle.regular11White60,
                     ),

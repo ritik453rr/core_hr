@@ -33,7 +33,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                   StringConstants.kUpdatePasswordSubtitle,
                   style: AppTextStyle.regular16Grey,
                 ),
-                const SizedBox(height: 32),
+                32.h,
                 Container(
                   width: Get.width,
                   decoration: BoxDecoration(
@@ -66,7 +66,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      20.h,
 
                       // New Password
                       Obx(
@@ -92,7 +92,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                           },
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      20.h,
 
                       // Confirm Password
                       Obx(
@@ -120,12 +120,12 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                           },
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      32.h,
 
                       // Change Password Button
                       Obx(
                         () => AppButton(
-                          text: StringConstants.kUpdatePassword,
+                          title: StringConstants.kUpdatePassword,
                           isLoading: controller.isLoading.value,
                           onPressed: controller.changePassword,
                         ),

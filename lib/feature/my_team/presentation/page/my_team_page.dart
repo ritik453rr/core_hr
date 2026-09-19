@@ -42,7 +42,7 @@ class MyTeamPage extends GetView<MyTeamController> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(16),
                     itemCount: controller.teamMembers.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
+                    separatorBuilder: (_, _) => 12.h,
                     itemBuilder: (context, index) {
                       final member = controller.teamMembers[index];
                       final isPresent = member.attendanceStatus == 'Present';
@@ -89,16 +89,16 @@ class MyTeamPage extends GetView<MyTeamController> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 14),
+                            14.w,
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(member.name, style: AppTextStyle.bold14),
-                                  const SizedBox(height: 2),
+                                  2.h,
                                   Text(member.role,
                                       style: AppTextStyle.regular12Grey),
-                                  const SizedBox(height: 4),
+                                  4.h,
                                   Text('Location: ${member.location}',
                                       style: AppTextStyle.regular11White60
                                           .copyWith(color: AppColors.c94A3B8)),
@@ -146,7 +146,7 @@ class MyTeamPage extends GetView<MyTeamController> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(16),
                     itemCount: controller.pendingApprovals.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
+                    separatorBuilder: (_, _) => 12.h,
                     itemBuilder: (context, index) {
                       final req = controller.pendingApprovals[index];
                       final isApproved = req.status == 'Approved';
@@ -183,15 +183,15 @@ class MyTeamPage extends GetView<MyTeamController> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            6.h,
                             Text(req.details,
                                 style: AppTextStyle.regular13Grey
                                     .copyWith(color: AppColors.c334155)),
-                            const SizedBox(height: 4),
+                            4.h,
                             Text('Requested: ${req.date}',
                                 style: AppTextStyle.regular11White60
                                     .copyWith(color: AppColors.c94A3B8)),
-                            const SizedBox(height: 12),
+                            12.h,
                             Builder(builder: (context) {
                               if (req.status == 'Pending') {
                                 return Row(
@@ -212,12 +212,9 @@ class MyTeamPage extends GetView<MyTeamController> {
                                           controller.rejectRequest(req),
                                       child: const Text('Reject'),
                                     ),
-                                    const SizedBox(width: 8),
+                                    8.w,
                                     AppButton(
-                                      backgroundColor: AppColors.c16A34A,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      text: 'Approve',
+                                      title: 'Approve',
                                       onPressed: () =>
                                           controller.approveRequest(req),
                                     ),

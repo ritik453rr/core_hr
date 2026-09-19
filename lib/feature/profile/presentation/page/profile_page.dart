@@ -27,7 +27,7 @@ class ProfilePage extends GetView<ProfileController> {
             tooltip: StringConstants.kEditProfileInfo,
             onPressed: controller.editProfileInfo,
           ),
-          const SizedBox(width: 8),
+          8.w,
         ],
       ),
       body: GetBuilder<ProfileController>(
@@ -40,29 +40,29 @@ class ProfilePage extends GetView<ProfileController> {
               children: [
                 // --- Employee Header Card ---
                 _buildProfileHeaderCard(controller),
-                const SizedBox(height: 20),
+                20.h,
 
                 // --- Stats Summary Row ---
                 _buildStatsRow(controller),
-                const SizedBox(height: 20),
+                20.h,
 
                 // --- Work & Personal Details ---
                 const Text(
                   StringConstants.kPersonalAndEmploymentDetails,
                   style: AppTextStyle.bold16,
                 ),
-                const SizedBox(height: 12),
+                12.h,
                 _buildInfoCard(controller),
-                const SizedBox(height: 24),
+                24.h,
 
                 // --- Account Actions ---
                 const Text(
                   StringConstants.kAccountAndSecurityActions,
                   style: AppTextStyle.bold16,
                 ),
-                const SizedBox(height: 12),
+                12.h,
                 _buildActionsCard(controller),
-                const SizedBox(height: 24),
+                24.h,
               ],
             ),
           );
@@ -148,7 +148,7 @@ class ProfilePage extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              16.w,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,13 +157,13 @@ class ProfilePage extends GetView<ProfileController> {
                       controller.employeeName,
                       style: AppTextStyle.bold18White,
                     ),
-                    const SizedBox(height: 4),
+                    4.h,
                     Text(
                       controller.employeeRole,
                       style: AppTextStyle.medium13Blue
                           .copyWith(color: AppColors.c93C5FD),
                     ),
-                    const SizedBox(height: 8),
+                    8.h,
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10,
@@ -202,7 +202,7 @@ class ProfilePage extends GetView<ProfileController> {
             AppColors.c2563EB,
           ),
         ),
-        const SizedBox(width: 12),
+        12.w,
         Expanded(
           child: _statTile(
             StringConstants.kLeaveBal,
@@ -211,7 +211,7 @@ class ProfilePage extends GetView<ProfileController> {
             AppColors.c10B981,
           ),
         ),
-        const SizedBox(width: 12),
+        12.w,
         Expanded(
           child: _statTile(
             StringConstants.kActiveLoan,
@@ -235,12 +235,12 @@ class ProfilePage extends GetView<ProfileController> {
       child: Column(
         children: [
           Icon(icon, color: color, size: 22),
-          const SizedBox(height: 6),
+          6.h,
           Text(
             title,
             style: AppTextStyle.semiBold11Grey,
           ),
-          const SizedBox(height: 2),
+          2.h,
           Text(
             value,
             style: AppTextStyle.bold14,
@@ -315,7 +315,7 @@ class ProfilePage extends GetView<ProfileController> {
       child: Row(
         children: [
           Icon(icon, color: AppColors.c2563EB, size: 22),
-          const SizedBox(width: 14),
+          14.w,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,7 +324,7 @@ class ProfilePage extends GetView<ProfileController> {
                   label,
                   style: AppTextStyle.semiBold11Grey,
                 ),
-                const SizedBox(height: 2),
+                2.h,
                 Text(
                   value,
                   style: AppTextStyle.semiBold14,

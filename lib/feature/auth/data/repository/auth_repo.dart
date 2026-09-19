@@ -10,7 +10,7 @@ class AuthRepo {
   /// Sends a login request to the server with the provided credentials.
   Future<ResponseModel> login({dynamic body}) async {
     final ResponseModel responseModel = await apiService.postRequest(
-      url: ApiEndPoints.login,
+      endpoint: ApiEndPoints.login,
       body: body,
       model: loginModelFromJson,
     );

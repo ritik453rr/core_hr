@@ -4,7 +4,8 @@ import '../controller/home_controller.dart';
 
 /// Interactive card for managing work shifts and clock-in/out actions.
 class ClockInCard extends StatelessWidget {
-  const ClockInCard({super.key});
+  final VoidCallback? onToggleClockIn;
+  const ClockInCard({super.key,this.onToggleClockIn});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,6 @@ class ClockInCard extends StatelessWidget {
         if (controller.isLoadingLatLong) {
           return const ClockInCardShimmer();
         }
-
         return Container(
           width: Get.width,
           decoration: BoxDecoration(
@@ -46,9 +46,9 @@ class ClockInCard extends StatelessWidget {
                         StringConstants.kDailyWorkShift,
                         style: AppTextStyle.bold11LightBlue,
                       ),
-                      const SizedBox(height: 4),
+                      4.h,
                       Text(
-                        controller.isClockedIn
+                        controller.isCheckIn
                             ? StringConstants.kActiveShiftInProgress
                             : StringConstants.kNotClockedInToday,
                         style: AppTextStyle.bold18White,
@@ -61,12 +61,12 @@ class ClockInCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: controller.isClockedIn
+                      color: controller.isCheckIn
                           ? AppColors.c22C55E.withValues(alpha: 0.2)
                           : AppColors.cF87171.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: controller.isClockedIn
+                        color: controller.isCheckIn
                             ? AppColors.c22C55E
                             : AppColors.cF87171,
                       ),
@@ -76,16 +76,16 @@ class ClockInCard extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 4,
-                          backgroundColor: controller.isClockedIn
+                          backgroundColor: controller.isCheckIn
                               ? AppColors.c22C55E
                               : AppColors.cF87171,
                         ),
-                        const SizedBox(width: 6),
+                        6.w,
                         Text(
-                          controller.isClockedIn
+                          controller.isCheckIn
                               ? StringConstants.kClockedIn
                               : StringConstants.kOffline,
-                          style: controller.isClockedIn
+                          style: controller.isCheckIn
                               ? AppTextStyle.bold11White.copyWith(
                                   color: AppColors.c4ADE80,
                                 )
@@ -98,7 +98,7 @@ class ClockInCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              16.h,
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -108,55 +108,39 @@ class ClockInCard extends StatelessWidget {
                     color: AppColors.cFFFFFF.withValues(alpha: 0.1),
                   ),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.my_location,
-                      color: AppColors.c38BDF8,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: SelectableText(
-                        controller.currentLatLong,
-                        style: AppTextStyle.regular12Grey.copyWith(
-                          color: AppColors.cE2E8F0,
+                    // 🟢 NEW: Address
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                          color: AppColors.c38BDF8,
+                          size: 18,
                         ),
-                      ),
+                        8.w,
+                        Expanded(
+                          child: Text(
+                            controller.currentAddress, // 🟢 NEW
+                            style: AppTextStyle.regular12Grey.copyWith(
+                              color: AppColors.cE2E8F0,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              16.h,
               AppButton(
-                width: Get.width,
-                height: 48,
-                backgroundColor: AppColors.cFFFFFF,
-                foregroundColor: AppColors.c0F172A,
-                borderRadius: 12,
-                onPressed: controller.toggleClockIn,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      controller.isClockedIn
-                          ? Icons.stop_circle_rounded
-                          : Icons.play_circle_fill_rounded,
-                      color: controller.isClockedIn
-                          ? AppColors.cDC2626
-                          : AppColors.c2563EB,
-                      size: 22,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      controller.isClockedIn
-                          ? StringConstants.kClockOut
-                          : StringConstants.kClockInWithLocation,
-                      style: AppTextStyle.bold14,
-                    ),
-                  ],
-                ),
+                onPressed: onToggleClockIn,
+                isLoading: controller.isClockInLoading,
+                title: controller.isCheckIn
+                    ? StringConstants.kClockOut
+                    : StringConstants.kClockInWithLocation,
               ),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:core_hr/core/storage/app_storage.dart';
 import 'package:core_hr/feature/auth/data/entity/login_entity.dart';
 import 'package:core_hr/feature/auth/data/model/login_model.dart';
 import 'package:core_hr/feature/auth/data/repository/auth_repo.dart';
+import 'package:flutter/foundation.dart';
 import '../../../../core/app_validator/app_validator.dart';
 
 /// IDs used for selective GetBuilder updates in Auth flow.
@@ -22,11 +23,14 @@ class AuthController extends GetxController {
   var obscurePassword = true;
   var isLogging = false;
   var isLoginValid = false;
-  var isLogoutLoading = false;
 
   @override
   void onInit() {
     super.onInit();
+    if (kDebugMode) {
+      loginEmailController.text = "Ashishyadav@shreebhargavifoundation.com";
+      loginPasswordController.text = "Test@12345";
+    }
     loginEmailController.addListener(validateLoginForm);
     loginPasswordController.addListener(validateLoginForm);
   }

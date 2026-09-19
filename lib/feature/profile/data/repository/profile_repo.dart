@@ -7,7 +7,7 @@ class ProfileRepo {
 
   Future<ResponseModel> logoutRequest() async {
     final ResponseModel resModel = await apiService.postRequest(
-      url: ApiEndPoints.logout,
+      endpoint: ApiEndPoints.logout,
     );
     return resModel;
   }

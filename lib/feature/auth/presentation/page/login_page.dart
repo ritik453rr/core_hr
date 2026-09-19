@@ -31,12 +31,12 @@ class LoginPage extends GetView<AuthController> {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.hzSpace,
-          vertical: AppConstants.vtSpace,
+          vertical:60,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 32),
+            32.h,
 
             // --- Welcome Text ---
             const Center(
@@ -45,14 +45,14 @@ class LoginPage extends GetView<AuthController> {
                 style: AppTextStyle.bold32,
               ),
             ),
-            const SizedBox(height: 8),
+            8.h,
             const Center(
               child: Text(
                 StringConstants.kSignInSubtitle,
                 style: AppTextStyle.regular16Grey,
               ),
             ),
-            const SizedBox(height: 40),
+            40.h,
 
             // --- Main Form Container ---
             Container(
@@ -76,14 +76,14 @@ class LoginPage extends GetView<AuthController> {
                     validator: (value) => AppValidator.validateEmail(value),
                     prefixIcon: Icons.mail_outline,
                   ),
-                  const SizedBox(height: 20),
+                  20.h,
 
                   // -- Password Field Label --
                   const Text(
                     StringConstants.kPasswordLabel,
                     style: AppTextStyle.semiBold14Grey,
                   ),
-                  const SizedBox(height: 8),
+                  8.h,
 
                   // -- Password Field Input --
                   GetBuilder<AuthController>(
@@ -105,17 +105,16 @@ class LoginPage extends GetView<AuthController> {
                       onSuffixTap: ctrl.togglePasswordVisibility,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  const SizedBox(height: 16),
+                  8.h,
+                  16.h,
 
                   // -- Login Button --
                   GetBuilder<AuthController>(
                     id: AuthBuilderIds.loginLoadingOverlay,
                     builder: (ctrl) => AppButton(
-                      text: StringConstants.kLoginButton,
-                      enable: ctrl.isLoginValid,
+                      title: StringConstants.kLoginButton,
                       isLoading: ctrl.isLogging,
-                      onPressed: ctrl.onTapLogin,
+                      onPressed: ctrl.isLoginValid ? ctrl.onTapLogin : null,
                     ),
                   ),
                 ],

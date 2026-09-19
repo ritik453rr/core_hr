@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Provides shorthand extensions to create SizedBox widgets for width and height spacing.
-extension SizedBoxExt on num {
-  SizedBox get w => SizedBox(width: toDouble());
-  SizedBox get h => SizedBox(height: toDouble());
+/// Extension on [num] to provide shorthand [SizedBox] for width and height.
+extension SizedBoxExtension on num {
+  Widget get w => SizedBox(width: toDouble());
+  Widget get h => SizedBox(height: toDouble());
 }

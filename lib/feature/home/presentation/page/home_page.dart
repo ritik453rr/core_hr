@@ -21,8 +21,8 @@ class HomePage extends GetView<HomeController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ClockInCard(),
-            const SizedBox(height: 24),
+            ClockInCard(onToggleClockIn: controller.toggleClockIn),
+            24.h,
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -36,9 +36,9 @@ class HomePage extends GetView<HomeController> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            12.h,
             ServicesGrid(onTapService: controller.onTapService),
-            const SizedBox(height: 20),
+            20.h,
           ],
         ),
       ),

@@ -56,19 +56,24 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                         ),
                       ),
                     ),
-                    const Center(
+                    Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.explore, color: Colors.white, size: 40),
-                          SizedBox(height: 6),
-                          Text(
+                          const Icon(Icons.explore, color: Colors.white, size: 40),
+                          6.h,
+                          const Text(
                             'LIVE SATELLITE GPS ACTIVE',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.2,
                                 fontSize: 13),
+                          ),
+                          4.h,
+                          Text(
+                            'Tracking ${controller.fieldStaffList.length} Active Field Officers',
+                            style: const TextStyle(color: Colors.white70, fontSize: 11),
                           ),
                         ],
                       ),
@@ -84,11 +89,11 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                 child: Row(
                   children: [
                     _filterChip(controller, 'All'),
-                    const SizedBox(width: 8),
+                    8.w,
                     _filterChip(controller, 'Active'),
-                    const SizedBox(width: 8),
+                    8.w,
                     _filterChip(controller, 'Idle'),
-                    const SizedBox(width: 8),
+                    8.w,
                     _filterChip(controller, 'Off Duty'),
                   ],
                 ),
@@ -106,7 +111,7 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                     return ListView.separated(
                       padding: const EdgeInsets.all(16),
                       itemCount: list.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: 12),
+                      separatorBuilder: (_, _) => 12.h,
                       itemBuilder: (context, index) {
                         final staff = list[index];
                         final isActive = staff.status == 'Active';
@@ -133,7 +138,7 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                                         child: Icon(Icons.person,
                                             color: Colors.white, size: 18),
                                       ),
-                                      const SizedBox(width: 10),
+                                      10.w,
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -177,13 +182,13 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 12),
+                              12.h,
 
                               Row(
                                 children: [
                                   const Icon(Icons.location_on,
                                       size: 16, color: AppColors.c0284C7),
-                                  const SizedBox(width: 6),
+                                  6.w,
                                   Expanded(
                                     child: Text(
                                       staff.currentArea,
@@ -192,14 +197,14 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 4),
+                              4.h,
                               Padding(
                                 padding: const EdgeInsets.only(left: 22.0),
                                 child: Text('Coordinates: ${staff.latLong}',
                                     style: AppTextStyle.regular11White60
                                         .copyWith(color: AppColors.c94A3B8)),
                               ),
-                              const SizedBox(height: 8),
+                              8.h,
 
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -208,7 +213,7 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                                     children: [
                                       const Icon(Icons.battery_std,
                                           size: 14, color: AppColors.c16A34A),
-                                      const SizedBox(width: 4),
+                                      4.w,
                                       Text('Battery: ${staff.batteryLevel}',
                                           style: AppTextStyle.regular11White60
                                               .copyWith(

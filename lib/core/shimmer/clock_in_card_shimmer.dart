@@ -10,37 +10,37 @@ class ClockInCardShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppShimmer(
       child: Container(
+        width: Get.width,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: AppColors.cFFFFFF,
           borderRadius: BorderRadius.circular(20),
+          // Using a subtle border instead of the full gradient/shadow to mimic the shape
           border: Border.all(color: AppColors.cE2E8F0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Bone.text(width: 80),
-                      SizedBox(height: 8),
-                      Bone.text(width: 150),
-                    ],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Bone.text(width: 100),
+                    4.h,
+                    const Bone.text(width: 160),
+                  ],
                 ),
-                const SizedBox(width: 16),
                 Bone.button(
                   width: 80,
-                  height: 24,
+                  height: 28,
                   borderRadius: BorderRadius.circular(20),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            16.h,
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -48,18 +48,25 @@ class ClockInCardShimmer extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppColors.cE2E8F0),
               ),
-              child: const Row(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Bone.icon(size: 18),
-                  SizedBox(width: 8),
+                  const Bone.icon(size: 18),
+                  8.w,
                   Expanded(
-                    child: Bone.text(words: 2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Bone.text(width: double.infinity),
+                        4.h,
+                        const Bone.text(width: 150),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            16.h,
             Bone.button(
               width: double.infinity,
               height: 48,

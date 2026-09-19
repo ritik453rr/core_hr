@@ -1,6 +1,4 @@
-import 'package:core_hr/core/constants/app_constants.dart';
-import 'package:flutter/material.dart';
-import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/constants/shared_imports.dart';
 
 /// A reusable custom text field widget with label, validation, custom borders, icons, and styling options.
 class AppTextField extends StatelessWidget {
@@ -66,7 +64,7 @@ class AppTextField extends StatelessWidget {
               fontSize: 14,
             ),
           ),
-          const SizedBox(height: 8),
+          8.h,
         ],
         TextFormField(
           controller: controller,

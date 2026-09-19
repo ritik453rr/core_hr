@@ -2,6 +2,8 @@
 <!-- Internet permission start -->
  <uses-permission android:name="android.permission.INTERNET" />
  <!-- Internet permission end -->
+ <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+ <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
         android:label="Core HR"
         android:name="${applicationName}"

@@ -1,6 +1,8 @@
 import 'package:geolocator/geolocator.dart';
 
+/// A service class for handling location-related operations.
 class LocationService {
+  /// Fetches the current position of the device, handling permissions and service status.
   static Future<Position?> getCurrentPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -24,9 +26,5 @@ class LocationService {
     }
 
     return await Geolocator.getCurrentPosition();
-  }
-
-  static String getLatLongString(Position position) {
-    return "Lat: ${position.latitude.toStringAsFixed(6)}, Long: ${position.longitude.toStringAsFixed(6)}";
   }
 }

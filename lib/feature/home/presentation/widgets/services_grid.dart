@@ -83,7 +83,7 @@ class ServicesGrid extends StatelessWidget {
                   ),
                   child: Icon(item.icon, color: item.color, size: 26),
                 ),
-                const SizedBox(height: 8),
+                8.h,
                 Text(
                   item.title,
                   textAlign: TextAlign.center,

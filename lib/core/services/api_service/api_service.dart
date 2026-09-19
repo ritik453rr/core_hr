@@ -69,7 +69,7 @@ class ApiService {
 
   /// Sends a POST request using Dio and returns a standardized ResponseModel with success, data, and error handling.
   Future<ResponseModel> postRequest({
-    required String url,
+    required String endpoint,
     dynamic body,
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -81,7 +81,7 @@ class ApiService {
     }
     try {
       final response = await dio.post(
-        url,
+        endpoint,
         data: body,
         queryParameters: queryParameters,
         options: options,

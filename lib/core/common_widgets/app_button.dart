@@ -1,93 +1,43 @@
-import 'package:flutter/material.dart';
+import 'package:core_hr/core/constants/shared_imports.dart';
 
-const Color _defaultPrimaryBlue = Color(0xFF003E99);
-
-/// A reusable custom button widget supporting enable status, loading indicators, icons, and custom styling.
+/// A custom button widget that follows the app's primary theme.
 class AppButton extends StatelessWidget {
-  final String? text;
-  final Widget? child;
+  final String title;
   final VoidCallback? onPressed;
-  final bool enable;
   final bool isLoading;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final Color? progressIndicatorColor;
-  final EdgeInsetsGeometry? padding;
-  final double borderRadius;
-  final double elevation;
-  final double? width;
-  final double? height;
-  final TextStyle? textStyle;
 
+  /// Creates an [AppButton] with a required [title] and optional [onPressed] and [isLoading].
   const AppButton({
     super.key,
-    this.text,
-    this.child,
+    required this.title,
     this.onPressed,
-    this.enable = true,
     this.isLoading = false,
-    this.backgroundColor,
-    this.foregroundColor,
-    this.progressIndicatorColor,
-    this.padding,
-    this.borderRadius = 8.0,
-    this.elevation = 0,
-    this.width,
-    this.height,
-    this.textStyle,
   });
 
+  /// Builds the button with a loading indicator or title text.
   @override
   Widget build(BuildContext context) {
-    final bool isButtonEnabled = enable && !isLoading && onPressed != null;
-
     final Widget buttonContent = isLoading
-        ? SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              color: progressIndicatorColor ?? Colors.white,
-              strokeWidth: 2,
-            ),
-          )
-        : (child ??
-            (text != null
-                ? Text(
-                    text!,
-                    style: textStyle ??
-                        const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  )
-                : const SizedBox.shrink()));
+        ? const AppLoadingIndicator(color: Colors.white, radius: 12)
+        : Text(title, style: AppTextStyle.bold16.copyWith(color: Colors.white));
 
-    final Widget elevatedButton = ElevatedButton(
+    return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? _defaultPrimaryBlue,
-        foregroundColor: foregroundColor ?? Colors.white,
-        padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
-        elevation: elevation,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
+        backgroundColor: AppColors.c003E99,
+        disabledBackgroundColor: AppColors.c003E99,
+        foregroundColor: Colors.white,
+        minimumSize: Size(Get.width, 50),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
-      onPressed: isButtonEnabled ? onPressed : null,
+      onPressed: isLoading
+          ? null
+          : () {
+              AppConstants.hapticFeedBack();
+              onPressed?.call();
+            },
       child: buttonContent,
     );
-
-    if (width != null || height != null) {
-      return SizedBox(
-        width: width,
-        height: height,
-        child: elevatedButton,
-      );
-    }
-
-    return elevatedButton;
   }
 }
-
-/// Alias for AppButton to allow CommonButton & CustomButton usage.
-typedef CommonButton = AppButton;
-typedef CustomButton = AppButton;

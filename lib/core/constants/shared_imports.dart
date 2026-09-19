@@ -22,6 +22,9 @@ export 'package:core_hr/core/language/string_constants.dart';
 // Routing
 export 'package:core_hr/core/routing/app_routes.dart';
 
+// Extensions
+export 'package:core_hr/core/extension/sized_box_extension.dart';
+
 // Common widgets
 export 'package:core_hr/core/common_widgets/common_widgets.dart';
 
