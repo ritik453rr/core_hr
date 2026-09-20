@@ -1,12 +1,13 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
-import 'package:core_hr/core/services/api_service/api_service.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/routing/app_routes.dart';
 import 'package:core_hr/core/services/location_service/location_service.dart';
 import 'package:core_hr/feature/home/data/entity/check_in_entity.dart';
 import 'package:core_hr/feature/home/data/repository/home_repo.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-
 import '../../../../core/common_model/response_model.dart';
+import '../../../../core/common_widgets/app_toast.dart';
 
 enum HomeBuilderIds { clockIn }
 
@@ -110,5 +111,9 @@ class HomeController extends GetxController {
       message: '$serviceName module integration coming soon.',
       isSuccess: true,
     );
+  }
+
+  Future<void> refreshHomePage() async{
+    await Future.delayed(const Duration(seconds: 5));
   }
 }

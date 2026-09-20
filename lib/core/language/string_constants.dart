@@ -1,24 +1,23 @@
-/// Contains all app-wide string constants for messages, labels, and errors.    
+/// Contains all app-wide string constants for messages, labels, and errors.
 class StringConstants {
-
   /// Internet
-  static const String kCheckInternetConnection =
-      "Check internet connection";
+  static const String kCheckInternetConnection = "Check internet connection";
 
   /// Common
   static const String kSuccess = "Success";
   static const String kError = "Error";
   static const String kWelcomeBack = "Welcome Back";
-  static const String kSignInSubtitle = "Sign in to sync your professional life";
+  static const String kSignInSubtitle =
+      "Sign in to sync your professional life";
   static const String kEmailLabel = "Email Address";
   static const String kEmailHint = "name@company.com";
   static const String kPasswordLabel = "Password";
-  static const String kPasswordHint = '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
+  static const String kPasswordHint =
+      '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
   static const String kLoginButton = "Login";
 
   /// Errors
-  static const String kSomethingWentWrong =
-      "Something went wrong";
+  static const String kSomethingWentWrong = "Something went wrong";
   static const String kServerNotFound =
       "Server not reachable. Please try again";
 
@@ -58,7 +57,8 @@ class StringConstants {
   static const String kDefaultProfileImageUrl =
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100";
   static const String kLiveLocationRecorded = "Live location recorded: ";
-  static const String kWorkDurationCalculated = "Total work duration calculated.";
+  static const String kWorkDurationCalculated =
+      "Total work duration calculated.";
 
   /// Attendance
   static const String kAttendanceAndClockIn = "Attendance & Clock-In";
@@ -110,7 +110,8 @@ class StringConstants {
   /// Splash
   static const String kAppTitle = "HR BOOK";
   static const String kAppSubtitle = "Automating HR & Payroll Solutions";
-  static const String kAppVersionFooter = "Enterprise Core HR Platform • v1.0.0";
+  static const String kAppVersionFooter =
+      "Enterprise Core HR Platform • v1.0.0";
 
   /// Logout Dialog
   static const String kConfirmLogout = "Confirm Logout";
@@ -119,4 +120,9 @@ class StringConstants {
   static const String kCancel = "Cancel";
   static const String kLogout = "Logout";
   static const String kLogoutSuccess = "You have logged out successfully.";
+
+  ///...................///
+  static const kEmailIsRequired = "Email is required";
+  static const kEnterAValidEmail = "Enter a valid email address";
+  static const kFieldRequired="Field is required";
 }

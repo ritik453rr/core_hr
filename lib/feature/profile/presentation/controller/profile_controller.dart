@@ -1,6 +1,10 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/language/string_constants.dart';
+import 'package:core_hr/core/dialogs/logout_dialog.dart';
 import 'package:core_hr/core/storage/app_storage.dart';
 import 'package:core_hr/feature/profile/data/repository/profile_repo.dart';
+
+import '../../../../core/common_widgets/app_toast.dart';
 
 /// Controller for managing user profile information and account actions.
 class ProfileController extends GetxController {

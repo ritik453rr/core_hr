@@ -1,4 +1,10 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:flutter/material.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/language/string_constants.dart';
+import 'package:core_hr/core/constants/app_text_style.dart';
+import 'package:core_hr/core/extension/sized_box_extension.dart';
+
+import '../../../../core/common_widgets/app_text.dart';
 
 /// Grid of available HR and field services for quick access.
 class ServicesGrid extends StatelessWidget {
@@ -84,9 +90,8 @@ class ServicesGrid extends StatelessWidget {
                   child: Icon(item.icon, color: item.color, size: 26),
                 ),
                 8.h,
-                Text(
+                AppText(
                   item.title,
-                  textAlign: TextAlign.center,
                   style: AppTextStyle.semiBold11Grey
                       .copyWith(color: AppColors.c1E293B),
                 ),

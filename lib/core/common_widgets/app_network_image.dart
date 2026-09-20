@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../constants/assets.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import '../shimmer/app_shimmer.dart';
 
 /// A reusable cached network image with rounded corners, placeholder, and error fallback.
 class AppNetworkImage extends StatelessWidget {
@@ -9,18 +10,14 @@ class AppNetworkImage extends StatelessWidget {
   final double width;
   final double borderRadius;
   final BoxFit fit;
-  final Widget Function(BuildContext, String)? placeholder;
-  final Widget Function(BuildContext, String, dynamic)? errorWidget;
 
   const AppNetworkImage({
     super.key,
-    this.imgUrl = "",
-    this.height = 125,
-    this.width = 125,
+    this.imgUrl = '',
+    this.height = 42,
+    this.width = 42,
     this.borderRadius = 12,
     this.fit = BoxFit.cover,
-    this.placeholder,
-    this.errorWidget,
   });
 
   @override
@@ -32,34 +29,17 @@ class AppNetworkImage extends StatelessWidget {
         height: height,
         width: width,
         fit: fit,
-        placeholder: placeholder ??
-            (context, url) => ClipRRect(
-                  borderRadius: BorderRadius.circular(height / 2),
-                  child: Container(
-                    height: height,
-                    width: width,
-                    color: Colors.grey.shade100,
-                  ),
-                ),
-        errorWidget: errorWidget ??
-            (context, url, error) => Image.asset(
-                  Assets.pngTriangleInsetHey,
-                  height: height,
-                  width: width,
-                  fit: fit,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: height,
-                    width: width,
-                    color: Colors.grey.shade200,
-                    child: const Icon(
-                      Icons.image_not_supported_outlined,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
+        placeholder: (context, url) => AppShimmer(
+          child: Bone(
+            width: width,
+            height: height,
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+        ),
+        errorWidget: (context, url, error) => const Center(
+          child: Icon(Icons.person, size: 40, color: Colors.grey),
+        ),
       ),
     );
   }
 }
-
-typedef CommonNetworkImage = AppNetworkImage;

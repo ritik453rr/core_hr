@@ -1,4 +1,7 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/extension/sized_box_extension.dart';
 import 'package:core_hr/core/shimmer/app_shimmer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

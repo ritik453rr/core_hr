@@ -1,4 +1,10 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/constants/app_text_style.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/constants/app_font_size.dart';
+import 'package:core_hr/core/extension/sized_box_extension.dart';
+import '../../../../core/common_widgets/app_text.dart';
 import '../controller/field_tracking_controller.dart';
 
 /// Page for monitoring field staff locations and status in real-time.
@@ -9,7 +15,7 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: const AppText(
           'Field Staff Live Tracking',
           style: AppTextStyle.bold18White,
         ),
@@ -62,18 +68,18 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                         children: [
                           const Icon(Icons.explore, color: Colors.white, size: 40),
                           6.h,
-                          const Text(
+                          const AppText(
                             'LIVE SATELLITE GPS ACTIVE',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.2,
-                                fontSize: 13),
+                                fontSize: AppFontSize.font13),
                           ),
                           4.h,
-                          Text(
+                          AppText(
                             'Tracking ${controller.fieldStaffList.length} Active Field Officers',
-                            style: const TextStyle(color: Colors.white70, fontSize: 11),
+                            style: const TextStyle(color: Colors.white70, fontSize: AppFontSize.font11),
                           ),
                         ],
                       ),
@@ -106,7 +112,7 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                     final list = controller.filteredStaff;
                     if (list.isEmpty) {
                       return const Center(
-                          child: Text('No field staff match filter.'));
+                          child: AppText('No field staff match filter.'));
                     }
                     return ListView.separated(
                       padding: const EdgeInsets.all(16),
@@ -143,9 +149,9 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(staff.staffName,
+                                          AppText(staff.staffName,
                                               style: AppTextStyle.bold14),
-                                          Text(
+                                          AppText(
                                               '${staff.designation} (${staff.staffId})',
                                               style:
                                                   AppTextStyle.regular11White60
@@ -167,7 +173,7 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                                               : AppColors.cF1F5F9,
                                       borderRadius: BorderRadius.circular(6),
                                     ),
-                                    child: Text(
+                                    child: AppText(
                                       staff.status,
                                       style: TextStyle(
                                         fontSize: 10,
@@ -190,7 +196,7 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                                       size: 16, color: AppColors.c0284C7),
                                   6.w,
                                   Expanded(
-                                    child: Text(
+                                    child: AppText(
                                       staff.currentArea,
                                       style: AppTextStyle.semiBold14,
                                     ),
@@ -200,7 +206,7 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                               4.h,
                               Padding(
                                 padding: const EdgeInsets.only(left: 22.0),
-                                child: Text('Coordinates: ${staff.latLong}',
+                                child: AppText('Coordinates: ${staff.latLong}',
                                     style: AppTextStyle.regular11White60
                                         .copyWith(color: AppColors.c94A3B8)),
                               ),
@@ -214,13 +220,13 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
                                       const Icon(Icons.battery_std,
                                           size: 14, color: AppColors.c16A34A),
                                       4.w,
-                                      Text('Battery: ${staff.batteryLevel}',
+                                      AppText('Battery: ${staff.batteryLevel}',
                                           style: AppTextStyle.regular11White60
                                               .copyWith(
                                                   color: AppColors.c64748B)),
                                     ],
                                   ),
-                                  Text('Last Ping: ${staff.lastPingTime}',
+                                  AppText('Last Ping: ${staff.lastPingTime}',
                                       style: AppTextStyle.regular11White60
                                           .copyWith(color: AppColors.c94A3B8)),
                                 ],
@@ -243,10 +249,10 @@ class FieldTrackingPage extends GetView<FieldTrackingController> {
   Widget _filterChip(FieldTrackingController controller, String label) {
     final selected = controller.selectedFilter == label;
     return ChoiceChip(
-      label: Text(label,
+      label: AppText(label,
           style: TextStyle(
               color: selected ? Colors.white : AppColors.c475569,
-              fontSize: 12)),
+              fontSize: AppFontSize.font12)),
       selected: selected,
       selectedColor: AppColors.c0F172A,
       backgroundColor: AppColors.cF1F5F9,

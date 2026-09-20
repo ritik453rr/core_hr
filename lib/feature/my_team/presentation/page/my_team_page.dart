@@ -1,4 +1,13 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/constants/app_text_style.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/constants/app_font_size.dart';
+import 'package:core_hr/core/extension/sized_box_extension.dart';
+import '../../../../core/common_widgets/app_button.dart';
+import '../../../../core/common_widgets/app_network_image.dart';
+import '../../../../core/common_widgets/app_refresh_indicator.dart';
+import '../../../../core/common_widgets/app_text.dart';
 import '../controller/my_team_controller.dart';
 
 /// Page for managing team reportees and handling pending approvals for requests.
@@ -11,7 +20,7 @@ class MyTeamPage extends GetView<MyTeamController> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
+          title: const AppText(
             'My Team Management',
             style: AppTextStyle.bold18White,
           ),
@@ -57,49 +66,25 @@ class MyTeamPage extends GetView<MyTeamController> {
                         ),
                         child: Row(
                           children: [
-                            AppNetworkImage(
+                            const AppNetworkImage(
                               imgUrl:
                                   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100',
                               width: 40,
                               height: 40,
                               borderRadius: 20,
-                              placeholder: (context, url) => CircleAvatar(
-                                backgroundColor: AppColors.c0F172A,
-                                child: Text(
-                                  member.name
-                                      .split(' ')
-                                      .map((n) => n[0])
-                                      .join(''),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  CircleAvatar(
-                                backgroundColor: AppColors.c0F172A,
-                                child: Text(
-                                  member.name
-                                      .split(' ')
-                                      .map((n) => n[0])
-                                      .join(''),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
+
                             ),
                             14.w,
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(member.name, style: AppTextStyle.bold14),
+                                  AppText(member.name, style: AppTextStyle.bold14),
                                   2.h,
-                                  Text(member.role,
+                                  AppText(member.role,
                                       style: AppTextStyle.regular12Grey),
                                   4.h,
-                                  Text('Location: ${member.location}',
+                                  AppText('Location: ${member.location}',
                                       style: AppTextStyle.regular11White60
                                           .copyWith(color: AppColors.c94A3B8)),
                                 ],
@@ -116,10 +101,10 @@ class MyTeamPage extends GetView<MyTeamController> {
                                         : AppColors.cF1F5F9,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Text(
+                              child: AppText(
                                 member.attendanceStatus,
                                 style: TextStyle(
-                                  fontSize: 11,
+                                  fontSize: AppFontSize.font11,
                                   fontWeight: FontWeight.bold,
                                   color: isPresent
                                       ? AppColors.c166534
@@ -163,7 +148,7 @@ class MyTeamPage extends GetView<MyTeamController> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(req.employeeName,
+                                AppText(req.employeeName,
                                     style: AppTextStyle.bold14),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
@@ -172,10 +157,10 @@ class MyTeamPage extends GetView<MyTeamController> {
                                     color: const Color(0xFFEFF6FF),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
-                                  child: Text(
+                                  child: AppText(
                                     req.requestType,
                                     style: const TextStyle(
-                                      fontSize: 11,
+                                      fontSize: AppFontSize.font11,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.c2563EB,
                                     ),
@@ -184,11 +169,11 @@ class MyTeamPage extends GetView<MyTeamController> {
                               ],
                             ),
                             6.h,
-                            Text(req.details,
+                            AppText(req.details,
                                 style: AppTextStyle.regular13Grey
                                     .copyWith(color: AppColors.c334155)),
                             4.h,
-                            Text('Requested: ${req.date}',
+                            AppText('Requested: ${req.date}',
                                 style: AppTextStyle.regular11White60
                                     .copyWith(color: AppColors.c94A3B8)),
                             12.h,
@@ -210,7 +195,7 @@ class MyTeamPage extends GetView<MyTeamController> {
                                       ),
                                       onPressed: () =>
                                           controller.rejectRequest(req),
-                                      child: const Text('Reject'),
+                                      child: const AppText('Reject'),
                                     ),
                                     8.w,
                                     AppButton(
@@ -221,7 +206,7 @@ class MyTeamPage extends GetView<MyTeamController> {
                                   ],
                                 );
                               }
-                              return Text(
+                              return AppText(
                                 'Decision: ${req.status}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,

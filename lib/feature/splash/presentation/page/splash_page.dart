@@ -1,14 +1,23 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
-import '../controller/splash_controller.dart';
+import 'package:core_hr/feature/splash/presentation/controller/splash_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/extension/sized_box_extension.dart';
+import 'package:core_hr/core/language/string_constants.dart';
+import 'package:core_hr/core/constants/app_text_style.dart';
+import '../../../../core/common_widgets/app_loading_indicator.dart';
+import '../../../../core/common_widgets/app_safe_area.dart';
+import '../../../../core/common_widgets/app_text.dart';
+import '../../../../core/constants/app_constants.dart';
 import '../widgets/splash_logo_widget.dart';
 
 /// Initial entry screen of the app displaying branding and handling initialization.
-class SplashPage extends StatelessWidget {
+class SplashPage extends GetView<SplashController> {
   const SplashPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(SplashController());
+    AppConstants.setSafeArea();
 
     return Scaffold(
       body: Container(
@@ -26,7 +35,7 @@ class SplashPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               40.h,
-
+          
               // Middle Logo and Branding
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -34,14 +43,14 @@ class SplashPage extends StatelessWidget {
                   // Logo Container with glowing effect & subtle border
                   const SplashLogoWidget(),
                   28.h,
-
+          
                   // App Title
-                  const Text(
+                  const AppText(
                     StringConstants.kAppTitle,
                     style: AppTextStyle.bold32White,
                   ),
                   10.h,
-
+          
                   // Subtitle
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -55,14 +64,14 @@ class SplashPage extends StatelessWidget {
                         color: Colors.white.withValues(alpha: 0.2),
                       ),
                     ),
-                    child: const Text(
+                    child: const AppText(
                       StringConstants.kAppSubtitle,
                       style: AppTextStyle.medium13Blue,
                     ),
                   ),
                 ],
               ),
-
+          
               // Bottom Loading Indicator & Version Footer
               Padding(
                 padding: const EdgeInsets.only(bottom: 24.0),
@@ -70,7 +79,7 @@ class SplashPage extends StatelessWidget {
                   children: [
                     const AppLoadingIndicator(color: AppColors.c38BDF8),
                     20.h,
-                    const Text(
+                    const AppText(
                       StringConstants.kAppVersionFooter,
                       style: AppTextStyle.regular11White60,
                     ),

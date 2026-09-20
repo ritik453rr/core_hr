@@ -1,4 +1,7 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/language/string_constants.dart';
 import '../../../field_tracking/presentation/page/field_tracking_page.dart';
 import '../../../home/presentation/page/home_page.dart';
 import '../../../my_team/presentation/page/my_team_page.dart';

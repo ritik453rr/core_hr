@@ -1,4 +1,5 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:flutter/material.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
 
 /// Reusable animated logo widget used in the Splash screen.
 class SplashLogoWidget extends StatelessWidget {

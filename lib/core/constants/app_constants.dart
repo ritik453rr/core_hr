@@ -19,4 +19,17 @@ class AppConstants {
       return HapticFeedback.vibrate();
     }
   }
+
+  /// Configures the system navigation and status bar appearance based on the theme.
+  static void setSafeArea({bool isDark = false}) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarColor: isDark ? Colors.black : Colors.white,
+        systemNavigationBarIconBrightness: isDark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      ),
+    );
+  }
 }

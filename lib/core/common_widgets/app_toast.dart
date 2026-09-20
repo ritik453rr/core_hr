@@ -1,13 +1,15 @@
+import 'package:core_hr/core/constants/app_font_size.dart';
+import 'package:core_hr/core/language/string_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
+import 'app_text.dart';
 
 /// Provides centralized toast and notification utilities.
 class AppToast {
-  /// Shows a success or error toast notification.
+  /// Shows a styled success or error toast notification.
   static ToastificationItem? showToast({
     required String message,
     bool isSuccess = false,
-    Alignment alignment = Alignment.topCenter,
   }) {
     if (message.trim().isEmpty) {
       return null;
@@ -15,19 +17,34 @@ class AppToast {
 
     toastification.dismissAll();
 
+    final Color primaryColor = isSuccess ? Colors.green : Colors.red;
+
     return toastification.show(
       type: isSuccess ? ToastificationType.success : ToastificationType.error,
       style: ToastificationStyle.flatColored,
-      primaryColor: isSuccess ? Colors.green : Colors.red,
-      autoCloseDuration: const Duration(seconds: 4),
-      alignment: alignment,
-      title: Text(
-        isSuccess ? 'Success' : 'Error',
-        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-      ),
-      description: Text(message, style: const TextStyle(fontSize: 12)),
-      borderRadius: BorderRadius.circular(12),
+      autoCloseDuration: const Duration(seconds: 3),
+      alignment: Alignment.topCenter,
       dragToClose: true,
+      closeButton: const ToastCloseButton(showType: CloseButtonShowType.none),
+      icon: Icon(
+        isSuccess ? Icons.check_circle_rounded : Icons.error_rounded,
+        color: primaryColor,
+        size: 26,
+      ),
+      title: AppText(
+        isSuccess ? StringConstants.kSuccess : StringConstants.kError,
+        style: const TextStyle(
+          fontSize: AppFontSize.font14,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      description: AppText(
+        message,
+        style: const TextStyle(
+          fontSize: AppFontSize.font12,
+          color: Colors.black87,
+        ),
+      ),
     );
   }
 }

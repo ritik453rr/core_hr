@@ -1,4 +1,4 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:get/get.dart';
 
 enum DashboardBuilderIds { dashboard }
 

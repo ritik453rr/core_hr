@@ -23,7 +23,9 @@ class AppPages {
     GetPage(
       name: AppRoutes.splash,
       page: () => const SplashPage(),
-      binding: BindingsBuilder(() => Get.lazyPut(() => SplashController())),
+      binding: BindingsBuilder(() {
+        Get.put(SplashController());
+      }),
     ),
     GetPage(
       name: AppRoutes.login,
@@ -43,14 +45,8 @@ class AppPages {
         Get.put(ProfileController(), permanent: true);
       }),
     ),
-    GetPage(
-      name: AppRoutes.home,
-      page: () => const HomePage(),
-    ),
-    GetPage(
-      name: AppRoutes.myTeam,
-      page: () => const MyTeamPage(),
-    ),
+    GetPage(name: AppRoutes.home, page: () => const HomePage()),
+    GetPage(name: AppRoutes.myTeam, page: () => const MyTeamPage()),
     GetPage(
       name: AppRoutes.fieldTracking,
       page: () => const FieldTrackingPage(),

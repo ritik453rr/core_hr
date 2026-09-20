@@ -1,7 +1,9 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/routing/app_routes.dart';
+import 'dart:async';
 import 'package:core_hr/core/storage/app_storage.dart';
 
-class SplashController extends GetxController { 
+class SplashController extends GetxController {
   @override
   void onInit() {
     super.onInit();

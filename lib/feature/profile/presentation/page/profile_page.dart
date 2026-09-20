@@ -1,4 +1,12 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/constants/app_text_style.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/language/string_constants.dart';
+import 'package:core_hr/core/routing/app_routes.dart';
+import 'package:core_hr/core/extension/sized_box_extension.dart';
+import '../../../../core/common_widgets/app_network_image.dart';
+import '../../../../core/common_widgets/app_text.dart';
 import '../controller/profile_controller.dart';
 
 /// User profile page displaying detailed employee information and account settings.
@@ -9,7 +17,7 @@ class ProfilePage extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: const AppText(
           StringConstants.kMyProfile,
           style: AppTextStyle.bold18White,
         ),
@@ -47,7 +55,7 @@ class ProfilePage extends GetView<ProfileController> {
                 20.h,
 
                 // --- Work & Personal Details ---
-                const Text(
+                const AppText(
                   StringConstants.kPersonalAndEmploymentDetails,
                   style: AppTextStyle.bold16,
                 ),
@@ -56,7 +64,7 @@ class ProfilePage extends GetView<ProfileController> {
                 24.h,
 
                 // --- Account Actions ---
-                const Text(
+                const AppText(
                   StringConstants.kAccountAndSecurityActions,
                   style: AppTextStyle.bold16,
                 ),
@@ -110,42 +118,6 @@ class ProfilePage extends GetView<ProfileController> {
                   width: 72,
                   height: 72,
                   borderRadius: 36,
-                  placeholder: (context, url) => Container(
-                    width: 72,
-                    height: 72,
-                    decoration: const BoxDecoration(
-                      color: AppColors.c2563EB,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        controller.employeeInitials,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    width: 72,
-                    height: 72,
-                    decoration: const BoxDecoration(
-                      color: AppColors.c2563EB,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        controller.employeeInitials,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 24,
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
               16.w,
@@ -153,12 +125,12 @@ class ProfilePage extends GetView<ProfileController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    AppText(
                       controller.employeeName,
                       style: AppTextStyle.bold18White,
                     ),
                     4.h,
-                    Text(
+                    AppText(
                       controller.employeeRole,
                       style: AppTextStyle.medium13Blue
                           .copyWith(color: AppColors.c93C5FD),
@@ -176,7 +148,7 @@ class ProfilePage extends GetView<ProfileController> {
                           color: Colors.white.withValues(alpha: 0.2),
                         ),
                       ),
-                      child: Text(
+                      child: AppText(
                         controller.employeeId,
                         style: AppTextStyle.bold11White,
                       ),
@@ -236,12 +208,12 @@ class ProfilePage extends GetView<ProfileController> {
         children: [
           Icon(icon, color: color, size: 22),
           6.h,
-          Text(
+          AppText(
             title,
             style: AppTextStyle.semiBold11Grey,
           ),
           2.h,
-          Text(
+          AppText(
             value,
             style: AppTextStyle.bold14,
           ),
@@ -320,12 +292,12 @@ class ProfilePage extends GetView<ProfileController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                AppText(
                   label,
                   style: AppTextStyle.semiBold11Grey,
                 ),
                 2.h,
-                Text(
+                AppText(
                   value,
                   style: AppTextStyle.semiBold14,
                 ),
@@ -350,7 +322,7 @@ class ProfilePage extends GetView<ProfileController> {
           ListTile(
             leading:
                 const Icon(Icons.lock_reset_rounded, color: AppColors.c0284C7),
-            title: const Text(
+            title: const AppText(
               StringConstants.kChangePassword,
               style: AppTextStyle.semiBold14,
             ),
@@ -364,7 +336,7 @@ class ProfilePage extends GetView<ProfileController> {
           const Divider(height: 1, indent: 50, endIndent: 16),
           ListTile(
             leading: const Icon(Icons.logout_rounded, color: AppColors.cDC2626),
-            title: const Text(
+            title: const AppText(
               StringConstants.kSignOutOfAccount,
               style: AppTextStyle.semiBold14Grey,
             ),

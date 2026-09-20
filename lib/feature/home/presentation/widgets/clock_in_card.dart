@@ -1,4 +1,11 @@
-import 'package:core_hr/core/constants/shared_imports.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/language/string_constants.dart';
+import 'package:core_hr/core/constants/app_text_style.dart';
+import 'package:core_hr/core/extension/sized_box_extension.dart';
+import '../../../../core/common_widgets/app_button.dart';
+import '../../../../core/common_widgets/app_text.dart';
 import '../../../../core/shimmer/clock_in_card_shimmer.dart';
 import '../controller/home_controller.dart';
 
@@ -42,12 +49,12 @@ class ClockInCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      const AppText(
                         StringConstants.kDailyWorkShift,
                         style: AppTextStyle.bold11LightBlue,
                       ),
                       4.h,
-                      Text(
+                      AppText(
                         controller.isCheckIn
                             ? StringConstants.kActiveShiftInProgress
                             : StringConstants.kNotClockedInToday,
@@ -81,7 +88,7 @@ class ClockInCard extends StatelessWidget {
                               : AppColors.cF87171,
                         ),
                         6.w,
-                        Text(
+                        AppText(
                           controller.isCheckIn
                               ? StringConstants.kClockedIn
                               : StringConstants.kOffline,
@@ -122,7 +129,7 @@ class ClockInCard extends StatelessWidget {
                         ),
                         8.w,
                         Expanded(
-                          child: Text(
+                          child: AppText(
                             controller.currentAddress, // 🟢 NEW
                             style: AppTextStyle.regular12Grey.copyWith(
                               color: AppColors.cE2E8F0,

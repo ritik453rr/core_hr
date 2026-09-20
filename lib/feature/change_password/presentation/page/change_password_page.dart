@@ -1,5 +1,14 @@
 import '../../../../core/app_validator/app_validator.dart';
-import '../../../../core/constants/shared_imports.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:core_hr/core/language/string_constants.dart';
+import 'package:core_hr/core/constants/app_text_style.dart';
+import 'package:core_hr/core/constants/app_colors.dart';
+import 'package:core_hr/core/extension/sized_box_extension.dart';
+import '../../../../core/common_widgets/app_button.dart';
+import '../../../../core/common_widgets/app_safe_area.dart';
+import '../../../../core/common_widgets/app_text.dart';
+import '../../../../core/common_widgets/app_text_field.dart';
 import '../controller/change_password_controller.dart';
 
 /// Page for authenticated users to update their account password.
@@ -10,7 +19,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: const AppText(
           StringConstants.kChangePassword,
           style: AppTextStyle.bold18,
         ),
@@ -29,7 +38,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
+                const AppText(
                   StringConstants.kUpdatePasswordSubtitle,
                   style: AppTextStyle.regular16Grey,
                 ),
@@ -48,7 +57,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                       // Current Password
                       Obx(
                         () => AppTextField(
-                          label: StringConstants.kCurrentPassword,
+                          title: StringConstants.kCurrentPassword,
                           controller: controller.currentPasswordController,
                           obscureText:
                               !controller.isCurrentPasswordVisible.value,
@@ -60,10 +69,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                           onSuffixTap:
                               controller.toggleCurrentPasswordVisibility,
                           validator: (value) =>
-                              AppValidator.validateRequired(
-                            value,
-                            StringConstants.kCurrentPassword,
-                          ),
+                              AppValidator.validateRequired(value),
                         ),
                       ),
                       20.h,
@@ -71,7 +77,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                       // New Password
                       Obx(
                         () => AppTextField(
-                          label: StringConstants.kNewPassword,
+                          title: StringConstants.kNewPassword,
                           controller: controller.newPasswordController,
                           obscureText: !controller.isNewPasswordVisible.value,
                           hintText: StringConstants.kPasswordHint,
@@ -82,8 +88,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                           onSuffixTap: controller.toggleNewPasswordVisibility,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppValidator.validateRequired(
-                                  value, StringConstants.kNewPassword);
+                              return AppValidator.validateRequired(value);
                             }
                             if (value.length < 6) {
                               return StringConstants.kPasswordMinLengthError;
@@ -97,7 +102,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                       // Confirm Password
                       Obx(
                         () => AppTextField(
-                          label: StringConstants.kConfirmNewPassword,
+                          title: StringConstants.kConfirmNewPassword,
                           controller: controller.confirmPasswordController,
                           obscureText:
                               !controller.isConfirmPasswordVisible.value,
@@ -110,10 +115,10 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                               controller.toggleConfirmPasswordVisibility,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppValidator.validateRequired(
-                                  value, StringConstants.kConfirmNewPassword);
+                              return AppValidator.validateRequired(value);
                             }
-                            if (value != controller.newPasswordController.text) {
+                            if (value !=
+                                controller.newPasswordController.text) {
                               return StringConstants.kPasswordMatchError;
                             }
                             return null;
