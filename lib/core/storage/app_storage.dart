@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:core_hr/core/common_model/common_user_model.dart';
+import 'package:core_hr/core/common_model/user_profile_model.dart';
 import 'package:core_hr/core/routing/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -31,22 +30,22 @@ class AppStorage {
     return _storage.read(authToken) ?? "";
   }
 
-  static void saveUserProfile(CommonUserModel? user) {
+  static void saveUserProfile(UserProfileData? user) {
     if (user == null) return;
     final userDataString = jsonEncode(user.toJson());
     _storage.write(userProfile, userDataString);
   }
 
   /// Returns the user profile from local storage
-  static CommonUserModel? getUserProfile() {
+  static UserProfileData? getUserProfile() {
     final userDataString = _storage.read(userProfile) ?? "";
     if (userDataString.isEmpty) return null;
-    return CommonUserModel.fromJson(jsonDecode(userDataString));
+    return UserProfileData.fromJson(jsonDecode(userDataString));
   }
 
   /// Clears user session / logout
   static void logOut() {
     _storage.erase();
-    Get.offAllNamed(AppRoutes.login);  
+    Get.offAllNamed(AppRoutes.login);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/services/api_service/api_service.dart';
-import '../../../../core/services/api_service/api_urls.dart';
+import '../../../../core/services/api_service/api_endpoints.dart';
 import '../../../../core/common_widgets/app_toast.dart';
 import '../../data/entity/change_password_entity.dart';
 

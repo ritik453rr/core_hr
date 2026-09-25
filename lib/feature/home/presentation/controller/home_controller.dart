@@ -18,12 +18,10 @@ class HomeController extends GetxController {
   final _homeRepo = HomeRepo();
   Position? _position;
 
-  // Consolidated Attendance State
+  // Variables
   bool isCheckIn = false;
   bool isLoadingLatLong = false;
   bool isClockInLoading = false;
-
-  String currentLatLong = 'Unknown';
   String currentAddress = 'Unknown';
 
   @override
@@ -80,11 +78,11 @@ class HomeController extends GetxController {
       return;
     }
 
-    checkInCheckOut();
+    checkIn();
   }
 
   /// Performs the check-in or check-out operation via the repository.
-  Future<void> checkInCheckOut() async {
+  Future<void> checkIn() async {
     isClockInLoading = true;
     update([HomeBuilderIds.clockIn]);
     final checkInEntity = CheckInEntity(
@@ -94,7 +92,7 @@ class HomeController extends GetxController {
     );
     final ResponseModel responseModel = await _homeRepo.checkInCheckOut(
       entity: checkInEntity,
-      isCheckIn: isCheckIn,
+      checkIn: !isCheckIn,
     );
     if (responseModel.status) {
       isCheckIn = !isCheckIn;
@@ -113,7 +111,7 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<void> refreshHomePage() async{
+  Future<void> refreshHomePage() async {
     await Future.delayed(const Duration(seconds: 5));
   }
 }

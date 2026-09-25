@@ -1,3 +1,5 @@
+import 'package:core_hr/core/common_widgets/app_loading_overlay.dart';
+import 'package:core_hr/core/common_widgets/app_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:core_hr/core/constants/app_text_style.dart';
@@ -7,6 +9,7 @@ import 'package:core_hr/core/routing/app_routes.dart';
 import 'package:core_hr/core/extension/sized_box_extension.dart';
 import '../../../../core/common_widgets/app_network_image.dart';
 import '../../../../core/common_widgets/app_text.dart';
+import '../../../../core/common_widgets/custom_app_bar.dart';
 import '../controller/profile_controller.dart';
 
 /// User profile page displaying detailed employee information and account settings.
@@ -16,32 +19,31 @@ class ProfilePage extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const AppText(
-          StringConstants.kMyProfile,
-          style: AppTextStyle.bold18White,
-        ),
-        backgroundColor: AppColors.c0F172A,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.badge_outlined, color: Colors.white),
-            tooltip: StringConstants.kDownloadIdCard,
-            onPressed: controller.downloadIdCard,
+      appBar: const CustomAppBar(title: StringConstants.kMyProfile),
+      body: Stack(
+        children: [
+          _buildBody(),
+
+          GetBuilder<ProfileController>(
+            id: ProfileBuilderIds.loadingOverlay,
+            builder: (logic) {
+              return AppLoadingOverlay(
+                enable: controller.showLoadingOverlay,
+                showLoader: true,
+              );
+            },
           ),
-          IconButton(
-            icon: const Icon(Icons.edit_outlined, color: Colors.white),
-            tooltip: StringConstants.kEditProfileInfo,
-            onPressed: controller.editProfileInfo,
-          ),
-          8.w,
         ],
       ),
-      body: GetBuilder<ProfileController>(
-        id: ProfileController.profileId,
-        builder: (controller) {
-          return SingleChildScrollView(
+    );
+  }
+
+  Widget _buildBody() {
+    return GetBuilder<ProfileController>(
+      id: ProfileBuilderIds.profilePage,
+      builder: (controller) {
+        return AppSafeArea(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,11 +52,7 @@ class ProfilePage extends GetView<ProfileController> {
                 _buildProfileHeaderCard(controller),
                 20.h,
 
-                // --- Stats Summary Row ---
-                _buildStatsRow(controller),
-                20.h,
-
-                // --- Work & Personal Details ---
+                // --- Personal & Employment Details ---
                 const AppText(
                   StringConstants.kPersonalAndEmploymentDetails,
                   style: AppTextStyle.bold16,
@@ -73,13 +71,28 @@ class ProfilePage extends GetView<ProfileController> {
                 24.h,
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
   Widget _buildProfileHeaderCard(ProfileController controller) {
+    final profile = controller.userProfileData;
+    final photo = profile?.profilePhoto;
+    final imgUrl = (photo != null && photo is String && photo.isNotEmpty)
+        ? photo
+        : StringConstants.kDefaultProfileImageUrl;
+    final name =
+        profile?.fullName ??
+        '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}'.trim();
+    final displayName = name.isNotEmpty ? name : StringConstants.kNA;
+    final role =
+        profile?.role ??
+        profile?.designation?.toString() ??
+        StringConstants.kNA;
+    final code = profile?.employeeCode ?? StringConstants.kNA;
+
     return Container(
       width: Get.width,
       padding: const EdgeInsets.all(20),
@@ -114,7 +127,7 @@ class ProfilePage extends GetView<ProfileController> {
                   ],
                 ),
                 child: AppNetworkImage(
-                  imgUrl: controller.profileImageUrl,
+                  imgUrl: imgUrl,
                   width: 72,
                   height: 72,
                   borderRadius: 36,
@@ -125,34 +138,31 @@ class ProfilePage extends GetView<ProfileController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppText(
-                      controller.employeeName,
-                      style: AppTextStyle.bold18White,
-                    ),
+                    AppText(displayName, style: AppTextStyle.bold18White),
                     4.h,
                     AppText(
-                      controller.employeeRole,
-                      style: AppTextStyle.medium13Blue
-                          .copyWith(color: AppColors.c93C5FD),
-                    ),
-                    8.h,
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
+                      role,
+                      style: AppTextStyle.medium13Blue.copyWith(
+                        color: AppColors.c93C5FD,
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.2),
+                    ),
+                    if (code != StringConstants.kNA && code.isNotEmpty) ...[
+                      8.h,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
                         ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.2),
+                          ),
+                        ),
+                        child: AppText(code, style: AppTextStyle.bold11White),
                       ),
-                      child: AppText(
-                        controller.employeeId,
-                        style: AppTextStyle.bold11White,
-                      ),
-                    ),
+                    ],
                   ],
                 ),
               ),
@@ -163,66 +173,117 @@ class ProfilePage extends GetView<ProfileController> {
     );
   }
 
-  Widget _buildStatsRow(ProfileController controller) {
-    return Row(
-      children: [
-        Expanded(
-          child: _statTile(
-            StringConstants.kExperience,
-            controller.totalExperience,
-            Icons.work_history_rounded,
-            AppColors.c2563EB,
-          ),
-        ),
-        12.w,
-        Expanded(
-          child: _statTile(
-            StringConstants.kLeaveBal,
-            controller.leaveBalance,
-            Icons.event_available_rounded,
-            AppColors.c10B981,
-          ),
-        ),
-        12.w,
-        Expanded(
-          child: _statTile(
-            StringConstants.kActiveLoan,
-            controller.activeLoan,
-            Icons.account_balance_rounded,
-            AppColors.cD97706,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _statTile(String title, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.cE2E8F0),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 22),
-          6.h,
-          AppText(
-            title,
-            style: AppTextStyle.semiBold11Grey,
-          ),
-          2.h,
-          AppText(
-            value,
-            style: AppTextStyle.bold14,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildInfoCard(ProfileController controller) {
+    final profile = controller.userProfileData;
+    final department = profile?.department ?? StringConstants.kNA;
+    final email = profile?.email ?? StringConstants.kNA;
+    final phoneCode = profile?.phoneCode ?? '';
+    final rawPhone = profile?.phone ?? '';
+    final phone = '$phoneCode $rawPhone'.trim();
+    final displayPhone = phone.isNotEmpty ? phone : StringConstants.kNA;
+
+    final shift = profile?.shift;
+    final workShift =
+        (shift != null && (shift.name != null || shift.startTime != null))
+        ? '${shift.name ?? ''} (${shift.startTime ?? ''} - ${shift.endTime ?? ''})'
+              .trim()
+        : StringConstants.kNA;
+    final manager = profile?.manager ?? StringConstants.kNA;
+    final location = profile?.branch ?? StringConstants.kNA;
+
+    final infoTiles = <Widget>[];
+
+    if (department != StringConstants.kNA && department.isNotEmpty) {
+      infoTiles.add(
+        _infoTile(
+          Icons.business_rounded,
+          StringConstants.kDepartment,
+          department,
+        ),
+      );
+    }
+
+    if (email != StringConstants.kNA && email.isNotEmpty) {
+      if (infoTiles.isNotEmpty) {
+        infoTiles.add(const Divider(height: 1, indent: 50, endIndent: 16));
+      }
+      infoTiles.add(
+        _infoTile(
+          Icons.mail_outline_rounded,
+          StringConstants.kEmailAddress,
+          email,
+        ),
+      );
+    }
+
+    if (displayPhone != StringConstants.kNA && displayPhone.isNotEmpty) {
+      if (infoTiles.isNotEmpty) {
+        infoTiles.add(const Divider(height: 1, indent: 50, endIndent: 16));
+      }
+      infoTiles.add(
+        _infoTile(
+          Icons.phone_iphone_rounded,
+          StringConstants.kPhoneNumber,
+          displayPhone,
+        ),
+      );
+    }
+
+    if (workShift != StringConstants.kNA && workShift.isNotEmpty) {
+      if (infoTiles.isNotEmpty) {
+        infoTiles.add(const Divider(height: 1, indent: 50, endIndent: 16));
+      }
+      infoTiles.add(
+        _infoTile(
+          Icons.schedule_rounded,
+          StringConstants.kWorkShift,
+          workShift,
+        ),
+      );
+    }
+
+    if (manager != StringConstants.kNA && manager.isNotEmpty) {
+      if (infoTiles.isNotEmpty) {
+        infoTiles.add(const Divider(height: 1, indent: 50, endIndent: 16));
+      }
+      infoTiles.add(
+        _infoTile(
+          Icons.supervisor_account_rounded,
+          StringConstants.kReportingManager,
+          manager,
+        ),
+      );
+    }
+
+    if (location != StringConstants.kNA && location.isNotEmpty) {
+      if (infoTiles.isNotEmpty) {
+        infoTiles.add(const Divider(height: 1, indent: 50, endIndent: 16));
+      }
+      infoTiles.add(
+        _infoTile(
+          Icons.location_on_outlined,
+          StringConstants.kOfficeLocation,
+          location,
+        ),
+      );
+    }
+
+    if (infoTiles.isEmpty) {
+      return Container(
+        width: Get.width,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.cE2E8F0),
+        ),
+        child: const AppText(
+          'No details available.',
+          style: AppTextStyle.regular14Grey,
+        ),
+      );
+    }
+
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
@@ -230,58 +291,11 @@ class ProfilePage extends GetView<ProfileController> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.cE2E8F0),
       ),
-      child: Column(
-        children: [
-          _infoTile(
-            Icons.business_rounded,
-            StringConstants.kDepartment,
-            controller.department,
-          ),
-          const Divider(height: 1, indent: 50, endIndent: 16),
-          _infoTile(
-            Icons.mail_outline_rounded,
-            StringConstants.kEmailAddress,
-            controller.email,
-          ),
-          const Divider(height: 1, indent: 50, endIndent: 16),
-          _infoTile(
-            Icons.phone_iphone_rounded,
-            StringConstants.kPhoneNumber,
-            controller.phone,
-          ),
-          const Divider(height: 1, indent: 50, endIndent: 16),
-          _infoTile(
-            Icons.calendar_today_rounded,
-            StringConstants.kDateOfJoining,
-            controller.joiningDate,
-          ),
-          const Divider(height: 1, indent: 50, endIndent: 16),
-          _infoTile(Icons.schedule_rounded, StringConstants.kWorkShift,
-              controller.workShift),
-          const Divider(height: 1, indent: 50, endIndent: 16),
-          _infoTile(
-            Icons.supervisor_account_rounded,
-            StringConstants.kReportingManager,
-            controller.manager,
-          ),
-          const Divider(height: 1, indent: 50, endIndent: 16),
-          _infoTile(
-            Icons.location_on_outlined,
-            StringConstants.kOfficeLocation,
-            controller.location,
-            isLast: true,
-          ),
-        ],
-      ),
+      child: Column(children: infoTiles),
     );
   }
 
-  Widget _infoTile(
-    IconData icon,
-    String label,
-    String value, {
-    bool isLast = false,
-  }) {
+  Widget _infoTile(IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
@@ -292,15 +306,9 @@ class ProfilePage extends GetView<ProfileController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText(
-                  label,
-                  style: AppTextStyle.semiBold11Grey,
-                ),
+                AppText(label, style: AppTextStyle.semiBold11Grey),
                 2.h,
-                AppText(
-                  value,
-                  style: AppTextStyle.semiBold14,
-                ),
+                AppText(value, style: AppTextStyle.semiBold14),
               ],
             ),
           ),
@@ -320,8 +328,10 @@ class ProfilePage extends GetView<ProfileController> {
       child: Column(
         children: [
           ListTile(
-            leading:
-                const Icon(Icons.lock_reset_rounded, color: AppColors.c0284C7),
+            leading: const Icon(
+              Icons.lock_reset_rounded,
+              color: AppColors.c0284C7,
+            ),
             title: const AppText(
               StringConstants.kChangePassword,
               style: AppTextStyle.semiBold14,
@@ -344,7 +354,7 @@ class ProfilePage extends GetView<ProfileController> {
               Icons.chevron_right_rounded,
               color: AppColors.cDC2626,
             ),
-            onTap: controller.logout,
+            onTap: controller.onTapLogout,
           ),
         ],
       ),

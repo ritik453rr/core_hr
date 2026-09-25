@@ -1,28 +1,16 @@
+import 'package:core_hr/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:core_hr/core/language/string_constants.dart';
-import 'package:core_hr/core/constants/app_text_style.dart';
-import 'package:core_hr/core/extension/sized_box_extension.dart';
-import '../common_widgets/app_button.dart';
 import '../common_widgets/app_text.dart';
 import '../common_widgets/app_text_button.dart';
+import '../constants/app_text_style.dart';
+import '../extension/sized_box_extension.dart';
+import '../language/string_constants.dart';
 
-/// A confirmation dialog shown when a user attempts to log out.
-class LogoutDialog extends StatelessWidget {
-  final VoidCallback? onCancel;
-  final VoidCallback? onConfirm;
-
-  const LogoutDialog({super.key, this.onCancel, this.onConfirm});
-
-  static Future<T?> show<T>({VoidCallback? onCancel, VoidCallback? onConfirm}) {
-    return Get.dialog<T>(
-      LogoutDialog(onCancel: onCancel, onConfirm: onConfirm),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog.adaptive(
+/// Displays the adaptive logout confirmation dialog.
+Future<dynamic> showLogoutDialog({void Function()? onConfirm}) {
+  return Get.dialog(
+    AlertDialog.adaptive(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const AppText(
         StringConstants.kConfirmLogout,
@@ -34,13 +22,24 @@ class LogoutDialog extends StatelessWidget {
       ),
       actions: [
         AppTextButton(
-          onPressed: onCancel ?? () => Get.back(),
           title: StringConstants.kCancel,
-          style: AppTextStyle.regular14Grey,
+          style: AppTextStyle.semiBold14Grey,
+          onPressed: () {
+            AppConstants.hapticFeedBack();
+            Get.back();
+          },
         ),
         10.w,
-        AppButton(title: StringConstants.kLogout, onPressed: onConfirm),
+        AppTextButton(
+          title: StringConstants.kLogout,
+          style: AppTextStyle.semiBold14Red,
+          onPressed: () {
+            AppConstants.hapticFeedBack();
+            Get.back();
+            onConfirm?.call();
+          },
+        ),
       ],
-    );
-  }
+    ),
+  );
 }

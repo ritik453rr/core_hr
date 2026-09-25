@@ -1,3 +1,4 @@
+import 'package:core_hr/feature/profile/presentation/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:core_hr/core/constants/app_colors.dart';
@@ -12,16 +13,21 @@ import '../controller/home_controller.dart';
 /// Interactive card for managing work shifts and clock-in/out actions.
 class ClockInCard extends StatelessWidget {
   final VoidCallback? onToggleClockIn;
-  const ClockInCard({super.key,this.onToggleClockIn});
+
+  const ClockInCard({super.key, this.onToggleClockIn});
 
   @override
   Widget build(BuildContext context) {
+    final profileController = Get.find<ProfileController>();
     return GetBuilder<HomeController>(
       id: HomeBuilderIds.clockIn,
       builder: (controller) {
-        if (controller.isLoadingLatLong) {
+        if (controller.isLoadingLatLong || profileController.isLoadingProfile) {
           return const ClockInCardShimmer();
         }
+
+        final isActive = controller.isCheckIn;
+
         return Container(
           width: Get.width,
           decoration: BoxDecoration(
@@ -55,7 +61,7 @@ class ClockInCard extends StatelessWidget {
                       ),
                       4.h,
                       AppText(
-                        controller.isCheckIn
+                        isActive
                             ? StringConstants.kActiveShiftInProgress
                             : StringConstants.kNotClockedInToday,
                         style: AppTextStyle.bold18White,
@@ -68,14 +74,12 @@ class ClockInCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: controller.isCheckIn
+                      color: isActive
                           ? AppColors.c22C55E.withValues(alpha: 0.2)
                           : AppColors.cF87171.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: controller.isCheckIn
-                            ? AppColors.c22C55E
-                            : AppColors.cF87171,
+                        color: isActive ? AppColors.c22C55E : AppColors.cF87171,
                       ),
                     ),
                     child: Row(
@@ -83,16 +87,14 @@ class ClockInCard extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 4,
-                          backgroundColor: controller.isCheckIn
+                          backgroundColor: isActive
                               ? AppColors.c22C55E
                               : AppColors.cF87171,
                         ),
                         6.w,
                         AppText(
-                          controller.isCheckIn
-                              ? StringConstants.kClockedIn
-                              : StringConstants.kOffline,
-                          style: controller.isCheckIn
+                          isActive ? 'Online' : StringConstants.kOffline,
+                          style: isActive
                               ? AppTextStyle.bold11White.copyWith(
                                   color: AppColors.c4ADE80,
                                 )
@@ -118,7 +120,6 @@ class ClockInCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 🟢 NEW: Address
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -130,7 +131,7 @@ class ClockInCard extends StatelessWidget {
                         8.w,
                         Expanded(
                           child: AppText(
-                            controller.currentAddress, // 🟢 NEW
+                            controller.currentAddress,
                             style: AppTextStyle.regular12Grey.copyWith(
                               color: AppColors.cE2E8F0,
                             ),
@@ -145,7 +146,7 @@ class ClockInCard extends StatelessWidget {
               AppButton(
                 onPressed: onToggleClockIn,
                 isLoading: controller.isClockInLoading,
-                title: controller.isCheckIn
+                title: isActive
                     ? StringConstants.kClockOut
                     : StringConstants.kClockInWithLocation,
               ),

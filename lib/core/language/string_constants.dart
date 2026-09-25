@@ -4,6 +4,7 @@ class StringConstants {
   static const String kCheckInternetConnection = "Check internet connection";
 
   /// Common
+  static const String kNA = "N/A";
   static const String kSuccess = "Success";
   static const String kError = "Error";
   static const String kWelcomeBack = "Welcome Back";

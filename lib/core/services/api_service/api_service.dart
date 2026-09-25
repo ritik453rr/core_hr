@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:core_hr/core/constants/app_keys.dart';
 import 'package:dio/dio.dart';
@@ -6,7 +7,6 @@ import 'package:get/get.dart' hide FormData, MultipartFile, Response;
 import '../../global/global.dart';
 import '../../language/string_constants.dart';
 import '../../storage/app_storage.dart';
-import 'api_constants.dart';
 import '../../common_model/response_model.dart';
 
 /// A Singleton onboarding_service class that handles API requests using Dio.
@@ -54,17 +54,37 @@ class ApiService {
   ResponseModel _handleResponse(Response response, dynamic model) {
     // If API provides a "success" or "status" field, use it, otherwise rely on statusCode
     final dynamic responseData = response.data;
-    bool isSuccess = (response.statusCode == 200 || response.statusCode == 201);
-    
-    if (responseData is Map && responseData.containsKey('success')) {
-       isSuccess = isSuccess && (responseData['success'] == true);
-    }
+    final bool isSuccess =
+        (response.statusCode == 200 || response.statusCode == 201);
 
     return ResponseModel(
       status: isSuccess,
-      data: model != null && isSuccess ? model(responseData) : responseData,
+      data: model != null && isSuccess
+          ? model(jsonEncode(responseData))
+          : responseData,
       message: responseData is Map ? (responseData['message'] ?? "") : "",
     );
+  }
+
+  ResponseModel _handleDioError(DioException e) {
+    if (CancelToken.isCancel(e)) {
+      return ResponseModel();
+    }
+    if (e.response != null) {
+      final data = e.response!.data;
+      return ResponseModel(
+        status: false,
+        message: data is Map
+            ? (data["message"] ?? StringConstants.kSomethingWentWrong)
+            : StringConstants.kSomethingWentWrong,
+        data: data,
+      );
+    } else {
+      return ResponseModel(
+        status: false,
+        message: StringConstants.kServerNotFound.tr,
+      );
+    }
   }
 
   /// Sends a POST request using Dio and returns a standardized ResponseModel with success, data, and error handling.
@@ -182,26 +202,6 @@ class ApiService {
       return _handleDioError(e);
     } catch (e) {
       return ResponseModel(status: false, message: e.toString());
-    }
-  }
-
-  ResponseModel _handleDioError(DioException e) {
-    if (CancelToken.isCancel(e)) {
-      return ResponseModel();
-    }
-    if (e.response != null) {
-      final data = e.response!.data;
-      final defaultMsg = ApiConstants.getApiErrorMsg(e.response!.statusCode);
-      return ResponseModel(
-        status: false,
-        message: data is Map ? (data["message"] ?? defaultMsg) : defaultMsg,
-        data: data,
-      );
-    } else {
-      return ResponseModel(
-        status: false,
-        message: StringConstants.kServerNotFound.tr,
-      );
     }
   }
 }

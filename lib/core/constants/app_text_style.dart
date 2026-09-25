@@ -51,6 +51,12 @@ class AppTextStyle {
     fontWeight: FontWeight.w400,
   );
 
+  static const TextStyle semiBold14Red = TextStyle(
+    color: AppColors.cDC2626,
+    fontSize: AppFontSize.font14,
+    fontWeight: FontWeight.w600,
+  );
+
   // --- Grey Styles (c4B5563 / c64748B) ---
 
   static const TextStyle regular16Grey = TextStyle(

@@ -1,0 +1,4 @@
+enum ShiftStatus {
+  active,
+  inactive,
+}

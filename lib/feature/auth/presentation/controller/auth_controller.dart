@@ -1,4 +1,5 @@
 import 'package:core_hr/core/common_model/response_model.dart';
+import 'package:core_hr/core/common_model/user_profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:core_hr/core/constants/app_constants.dart';
@@ -32,11 +33,9 @@ class AuthController extends GetxController {
     super.onInit();
     if (kDebugMode) {
       loginEmailController.text = "Ashishyadav@shreebhargavifoundation.com";
-      // loginPasswordController.text = "Test@12345";
+      loginPasswordController.text = "Test@12345";
     }
   }
-
-
 
   // --- LOGIN METHODS ---
   void togglePasswordVisibility() {
@@ -67,8 +66,9 @@ class AuthController extends GetxController {
       );
       if (resModel.status) {
         final LoginModel loginModel = resModel.data;
+        final UserProfileData? userProfileData = loginModel.userProfileData;
         AppStorage.saveAuthToken(loginModel.token ?? "");
-        AppStorage.saveUserProfile(loginModel.user);
+        AppStorage.saveUserProfile(userProfileData);
         AppStorage.saveLoginStatus(true);
         Get.offAllNamed(AppRoutes.dashboard);
       } else {

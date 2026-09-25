@@ -1,19 +1,16 @@
-import 'package:core_hr/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
 import 'package:core_hr/core/constants/app_theme.dart';
 import 'package:core_hr/core/routing/app_pages.dart';
 import 'package:core_hr/core/routing/app_routes.dart';
 import 'package:get_storage/get_storage.dart';
-
 import 'package:toastification/toastification.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await dotenv.load(fileName: ".env");
-
   runApp(const MyApp());
 }
 
@@ -29,6 +26,8 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         getPages: AppPages.pages,
         initialRoute: AppRoutes.splash,
+        defaultTransition: Transition.rightToLeft,
+        transitionDuration: const Duration(milliseconds: 350),
       ),
     );
   }

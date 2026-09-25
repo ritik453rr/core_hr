@@ -10,15 +10,15 @@ class Global {
   /// Checks internet connectivity, updates state, and optionally shows an error message.
   static Future<bool> checkInternet({bool showMsg = true}) async {
     final results = await connectivity.checkConnectivity();
-    final isConnected =
-        results.any((result) => result != ConnectivityResult.none);
+    final isConnected = results.any(
+      (result) => result != ConnectivityResult.none,
+    );
 
     if (isConnected) {
       return true;
     } else {
       if (showMsg) {
         AppToast.showToast(
-          isSuccess: false,
           message: StringConstants.kCheckInternetConnection.tr,
         );
       }

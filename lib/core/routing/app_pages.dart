@@ -19,6 +19,8 @@ import '../../feature/change_password/presentation/controller/change_password_co
 
 /// Configures all application routes with their corresponding pages and bindings.
 class AppPages {
+  static const Duration _defaultDuration = Duration(milliseconds: 350);
+
   static final pages = [
     GetPage(
       name: AppRoutes.splash,
@@ -26,6 +28,8 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.put(SplashController());
       }),
+      transition: Transition.fadeIn,
+      transitionDuration: _defaultDuration,
     ),
     GetPage(
       name: AppRoutes.login,
@@ -33,6 +37,8 @@ class AppPages {
       binding: BindingsBuilder(
         () => Get.lazyPut(() => AuthController(), fenix: true),
       ),
+      transition: Transition.fadeIn,
+      transitionDuration: _defaultDuration,
     ),
     GetPage(
       name: AppRoutes.dashboard,
@@ -44,20 +50,41 @@ class AppPages {
         Get.lazyPut(() => MyTeamController(), fenix: true);
         Get.put(ProfileController(), permanent: true);
       }),
+      transition: Transition.fadeIn,
+      transitionDuration: _defaultDuration,
     ),
-    GetPage(name: AppRoutes.home, page: () => const HomePage()),
-    GetPage(name: AppRoutes.myTeam, page: () => const MyTeamPage()),
+    GetPage(
+      name: AppRoutes.home,
+      page: () => const HomePage(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: _defaultDuration,
+    ),
+    GetPage(
+      name: AppRoutes.myTeam,
+      page: () => const MyTeamPage(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: _defaultDuration,
+    ),
     GetPage(
       name: AppRoutes.fieldTracking,
       page: () => const FieldTrackingPage(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: _defaultDuration,
     ),
-    GetPage(name: AppRoutes.profile, page: () => const ProfilePage()),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () => const ProfilePage(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: _defaultDuration,
+    ),
     GetPage(
       name: AppRoutes.changePassword,
       page: () => const ChangePasswordPage(),
       binding: BindingsBuilder(
         () => Get.lazyPut(() => ChangePasswordController()),
       ),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: _defaultDuration,
     ),
   ];
 }

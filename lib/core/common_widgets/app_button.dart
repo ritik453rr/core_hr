@@ -1,3 +1,4 @@
+import 'package:core_hr/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:core_hr/core/constants/app_text_style.dart';
@@ -33,12 +34,17 @@ class AppButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.c003E99,
         foregroundColor: Colors.white,
-        minimumSize: Size(Get.width, 0),
+        minimumSize: Size(Get.width, 55),
         padding: const EdgeInsets.symmetric(vertical: 16),
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
-      onPressed: isLoading ? null : onPressed,
+      onPressed: isLoading
+          ? null
+          : () {
+              AppConstants.hapticFeedBack();
+              onPressed?.call();
+            },
       child: buttonContent,
     );
   }

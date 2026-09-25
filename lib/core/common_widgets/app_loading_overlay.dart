@@ -19,7 +19,7 @@ class AppLoadingOverlay extends StatelessWidget {
     return AbsorbPointer(
       child: SizedBox.expand(
         child: ColoredBox(
-          color: Colors.black12,
+          color: Colors.black26,
           child: !showLoader
               ? null
               : const Center(child: AppLoadingIndicator(radius: 14)),
