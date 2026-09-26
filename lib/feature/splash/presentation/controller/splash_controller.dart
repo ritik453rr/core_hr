@@ -10,6 +10,7 @@ class SplashController extends GetxController {
     navigation();
   }
 
+  /// Navigates to dashboard or login page after delay based on login status.
   void navigation() {
     Future.delayed(const Duration(seconds: 2), () {
       final isLoggedIn = AppStorage.getLoginStatus();
