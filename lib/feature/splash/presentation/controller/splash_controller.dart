@@ -3,6 +3,7 @@ import 'package:core_hr/core/routing/app_routes.dart';
 import 'dart:async';
 import 'package:core_hr/core/storage/app_storage.dart';
 
+/// Controller for managing splash screen navigation based on auth status.
 class SplashController extends GetxController {
   @override
   void onInit() {
