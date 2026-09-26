@@ -1,20 +1,19 @@
-import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:core_hr/core/routing/app_routes.dart';
 import 'package:core_hr/core/services/location_service/location_service.dart';
 import 'package:core_hr/feature/home/data/entity/check_in_entity.dart';
 import 'package:core_hr/feature/home/data/repository/home_repo.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+
 import '../../../../core/common_model/response_model.dart';
 import '../../../../core/common_widgets/app_toast.dart';
 
-enum HomeBuilderIds { clockIn }
+enum HomeBuilderIds { clockInCard, homeAppBar }
 
 /// Controller for managing home page state and consolidated attendance logic.
 class HomeController extends GetxController {
   // Instances.......
-  final _geocoding = Geocoding();
   final _homeRepo = HomeRepo();
   Position? _position;
 
@@ -22,49 +21,46 @@ class HomeController extends GetxController {
   bool isCheckIn = false;
   bool isLoadingLatLong = false;
   bool isClockInLoading = false;
-  String currentAddress = 'Unknown';
+  String currentAddress = '';
 
   @override
   void onInit() {
     super.onInit();
-    getLatLang();
+    getUserAddress();
   }
 
   /// Fetches the current latitude, longitude, and address.
-  Future<void> getLatLang() async {
+  Future<void> getUserAddress() async {
     isLoadingLatLong = true;
-    update([HomeBuilderIds.clockIn]);
+    update([HomeBuilderIds.clockInCard]);
 
-    try {
-      _position = await LocationService.getCurrentPosition();
+    _position = await LocationService.getCurrentPosition();
 
-      if (_position == null) {
-        return;
-      }
-
-      final latitude = _position!.latitude;
-      final longitude = _position!.longitude;
-
-      // Convert fetched coordinates into address.
-      final List<Placemark> placemarks = await _geocoding
-          .placemarkFromCoordinates(latitude, longitude);
-
-      if (placemarks.isNotEmpty) {
-        final Placemark place = placemarks.first;
-        currentAddress = [
-          place.street,
-          place.subLocality,
-          place.postalCode,
-          place.country,
-        ].where((value) => value != null && value.trim().isNotEmpty).join(', ');
-      }
-    } catch (e) {
-      debugPrint('Location error: $e');
-      AppToast.showToast(message: e.toString());
-    } finally {
+    if (_position == null) {
       isLoadingLatLong = false;
-      update([HomeBuilderIds.clockIn]);
+      update([HomeBuilderIds.clockInCard]);
+      return;
     }
+
+    final latitude = _position!.latitude;
+    final longitude = _position!.longitude;
+
+    final Placemark? place = await LocationService.getPlacemark(
+      latitude: latitude,
+      longitude: longitude,
+    );
+
+    if (place != null) {
+      currentAddress =
+          [place.street, place.subLocality, place.postalCode, place.country]
+              .where((value) {
+                return value != null && value.trim().isNotEmpty;
+              })
+              .join(', ');
+    }
+
+    isLoadingLatLong = false;
+    update([HomeBuilderIds.clockInCard]);
   }
 
   void onTapProfile() {
@@ -84,7 +80,7 @@ class HomeController extends GetxController {
   /// Performs the check-in or check-out operation via the repository.
   Future<void> checkIn() async {
     isClockInLoading = true;
-    update([HomeBuilderIds.clockIn]);
+    update([HomeBuilderIds.clockInCard]);
     final checkInEntity = CheckInEntity(
       latitude: _position!.latitude,
       longitude: _position!.longitude,
@@ -100,7 +96,7 @@ class HomeController extends GetxController {
       AppToast.showToast(message: responseModel.message);
     }
     isClockInLoading = false;
-    update([HomeBuilderIds.clockIn]);
+    update([HomeBuilderIds.clockInCard]);
   }
 
   /// Handles tap on HR service modules.

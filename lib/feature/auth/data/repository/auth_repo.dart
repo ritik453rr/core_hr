@@ -31,6 +31,7 @@ class AuthRepo {
     final ResponseModel resModel = await apiService.getRequest(
       url: ApiEndPoints.profile,
       model: userProfileModelFromJson,
+      showInternetMsg: true
     );
     return resModel;
   }

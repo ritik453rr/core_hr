@@ -48,7 +48,7 @@ class AppPages {
         Get.lazyPut(() => HomeController(), fenix: true);
         Get.lazyPut(() => FieldTrackingController(), fenix: true);
         Get.lazyPut(() => MyTeamController(), fenix: true);
-        Get.put(ProfileController(), permanent: true);
+        Get.put(ProfileController());
       }),
       transition: Transition.fadeIn,
       transitionDuration: _defaultDuration,

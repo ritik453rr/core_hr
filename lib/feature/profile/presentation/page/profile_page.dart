@@ -79,10 +79,8 @@ class ProfilePage extends GetView<ProfileController> {
 
   Widget _buildProfileHeaderCard(ProfileController controller) {
     final profile = controller.userProfileData;
-    final photo = profile?.profilePhoto;
-    final imgUrl = (photo != null && photo is String && photo.isNotEmpty)
-        ? photo
-        : StringConstants.kDefaultProfileImageUrl;
+    final String photo = profile?.profilePhoto??"";
+
     final name =
         profile?.fullName ??
         '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}'.trim();
@@ -127,7 +125,7 @@ class ProfilePage extends GetView<ProfileController> {
                   ],
                 ),
                 child: AppNetworkImage(
-                  imgUrl: imgUrl,
+                  imgUrl: photo,
                   width: 72,
                   height: 72,
                   borderRadius: 36,

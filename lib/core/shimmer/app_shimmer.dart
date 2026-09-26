@@ -9,6 +9,13 @@ class AppShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Skeletonizer(enabled: enable, child: child);
+    return Skeletonizer(
+      enabled: enable,
+      effect: const ShimmerEffect(
+        baseColor: Color(0xFFADB2B8),
+        highlightColor: Color(0xFFD9DDE1),
+      ),
+      child: child,
+    );
   }
 }

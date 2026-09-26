@@ -30,7 +30,6 @@ class ProfileController extends GetxController {
   /// Loads user profile from local storage and updates UI state.
   void getLocalStorageProfile() {
     userProfileData = AppStorage.getUserProfile();
-    update([ProfileBuilderIds.profilePage]);
   }
 
   /// Fetches user profile from API and updates UI state.
@@ -41,17 +40,20 @@ class ProfileController extends GetxController {
     final ResponseModel resModel = await authRepo.getUserProfile();
     if (resModel.status) {
       final UserProfileModel userProfileModel = resModel.data;
-      userProfileData = userProfileModel.userProfileData;
-      final homeController = Get.find<HomeController>();
-      final status = userProfileData?.status?.toLowerCase();
-      homeController.isCheckIn = status == ShiftStatus.active.name;
-      AppStorage.saveUserProfile(userProfileData);
+      if (userProfileModel.userProfileData != null) {
+        userProfileData = userProfileModel.userProfileData;
+        final homeController = Get.find<HomeController>();
+        final status = userProfileData?.status?.toLowerCase();
+        homeController.isCheckIn = status == ShiftStatus.active.name;
+        AppStorage.saveUserProfile(userProfileData);
+      }
     } else {
       AppToast.showToast(message: resModel.message);
     }
     isLoadingProfile = false;
     update([ProfileBuilderIds.profilePage]);
-    update([HomeBuilderIds.clockIn]);
+    update([HomeBuilderIds.clockInCard]);
+    update([HomeBuilderIds.homeAppBar]);
   }
 
   /// Displays the logout confirmation dialog.
