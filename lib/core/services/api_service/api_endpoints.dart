@@ -4,6 +4,7 @@ class ApiEndPoints {
   static const String logout = "/auth/logout";
   static const String profile = "/profile";
   static const String changePassword = "/change-password";
+  static const String profileUpdate = "/profile/update";
 
   // Home
   static const String checkIn = "/attendance/check-in";

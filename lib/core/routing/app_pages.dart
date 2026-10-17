@@ -14,6 +14,7 @@ import '../../feature/field_tracking/presentation/page/field_tracking_page.dart'
 import '../../feature/field_tracking/presentation/controller/field_tracking_controller.dart';
 import '../../feature/profile/presentation/page/profile_page.dart';
 import '../../feature/profile/presentation/controller/profile_controller.dart';
+import '../../feature/profile/presentation/page/edit_profile_page.dart';
 import '../../feature/change_password/presentation/page/change_password_page.dart';
 import '../../feature/change_password/presentation/controller/change_password_controller.dart';
 
@@ -74,6 +75,12 @@ class AppPages {
     GetPage(
       name: AppRoutes.profile,
       page: () => const ProfilePage(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: _defaultDuration,
+    ),
+    GetPage(
+      name: AppRoutes.editProfile,
+      page: () => const EditProfilePage(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: _defaultDuration,
     ),

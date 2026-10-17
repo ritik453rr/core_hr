@@ -61,7 +61,7 @@ class AuthController extends GetxController {
         email: loginEmailController.text.trim(),
         password: loginPasswordController.text.trim(),
       );
-      final ResponseModel resModel = await authRepo.login(
+      final ApiResponseModel resModel = await authRepo.login(
         body: loginEntity.toJson(),
       );
       if (resModel.status) {

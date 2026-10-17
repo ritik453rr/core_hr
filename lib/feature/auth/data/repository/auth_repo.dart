@@ -9,8 +9,8 @@ class AuthRepo {
   var apiService = ApiService();
 
   /// Sends a login request to the server with the provided credentials.
-  Future<ResponseModel> login({dynamic body}) async {
-    final ResponseModel responseModel = await apiService.postRequest(
+  Future<ApiResponseModel> login({dynamic body}) async {
+    final ApiResponseModel responseModel = await apiService.postRequest(
       endpoint: ApiEndPoints.login,
       body: body,
       model: loginModelFromJson,
@@ -19,16 +19,16 @@ class AuthRepo {
   }
 
   /// Sends a logout request to the server.
-  Future<ResponseModel> logout() async {
-    final ResponseModel resModel = await apiService.postRequest(
+  Future<ApiResponseModel> logout() async {
+    final ApiResponseModel resModel = await apiService.postRequest(
       endpoint: ApiEndPoints.logout,
     );
     return resModel;
   }
 
   /// Fetches the user profile from the server.
-  Future<ResponseModel> getUserProfile() async {
-    final ResponseModel resModel = await apiService.getRequest(
+  Future<ApiResponseModel> getUserProfile() async {
+    final ApiResponseModel resModel = await apiService.getRequest(
       url: ApiEndPoints.profile,
       model: userProfileModelFromJson,
       showInternetMsg: true

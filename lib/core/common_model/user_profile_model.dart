@@ -15,7 +15,7 @@ class UserProfileModel {
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) => UserProfileModel(
     message: json["message"],
-    userProfileData: json["profile"] == null ? null : UserProfileData.fromJson(json["profile"]),
+    userProfileData: json["user"] == null ? null : UserProfileData.fromJson(json["user"]),
   );
 
   Map<String, dynamic> toJson() => {

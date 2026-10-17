@@ -36,9 +36,13 @@ class AppNetworkImage extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
           ),
         ),
-        errorWidget: (context, url, error) => const Center(
-          child: Icon(Icons.person, size: 40, color: Colors.grey),
-        ),
+        errorWidget: (context, url, error) {
+          debugPrint('Image URL: $url');
+          debugPrint('Image loading error: $error');
+          return const Center(
+            child: Icon(Icons.person, size: 40, color: Colors.grey),
+          );
+        },
       ),
     );
   }

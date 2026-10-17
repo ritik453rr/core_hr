@@ -1,10 +1,10 @@
 /// Standard API response model used across network layer.
-class ResponseModel {
+class ApiResponseModel {
   bool status;
   String message;
   dynamic data;
 
-  ResponseModel({
+  ApiResponseModel({
     this.status = false,
     this.message = "",
     this.data = "",

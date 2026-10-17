@@ -7,5 +7,6 @@ class AppRoutes {
   static const String myTeam = "/my-team";
   static const String fieldTracking = "/field-tracking";
   static const String profile = "/profile";
+  static const String editProfile = "/edit-profile";
   static const String changePassword = "/change-password";
 }

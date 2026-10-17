@@ -26,4 +26,16 @@ class AppValidator {
     }
     return null;
   }
+
+  /// Form field validator for 10-digit phone number.
+  static String? validatePhoneNumber(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return validateRequired(value);
+    }
+    final trimmed = value.trim();
+    if (trimmed.length != 10 || !RegExp(r'^\d+$').hasMatch(trimmed)) {
+      return StringConstants.kPhoneNumberMustBe10Digits;
+    }
+    return null;
+  }
 }

@@ -86,7 +86,7 @@ class HomeController extends GetxController {
       longitude: _position!.longitude,
       address: currentAddress,
     );
-    final ResponseModel responseModel = await _homeRepo.checkInCheckOut(
+    final ApiResponseModel responseModel = await _homeRepo.checkInCheckOut(
       entity: checkInEntity,
       checkIn: !isCheckIn,
     );

@@ -8,11 +8,11 @@ class HomeRepo {
   var apiService = ApiService();
 
   /// Sends a check-in or check-out request with the user's location details.
-  Future<ResponseModel> checkInCheckOut({
+  Future<ApiResponseModel> checkInCheckOut({
     required CheckInEntity entity,
     required bool checkIn,
   }) async {
-    final ResponseModel responseModel = await apiService.postRequest(
+    final ApiResponseModel responseModel = await apiService.postRequest(
       endpoint: checkIn ? ApiEndPoints.checkIn : ApiEndPoints.checkOut,
       body: entity.toJson(),
     );

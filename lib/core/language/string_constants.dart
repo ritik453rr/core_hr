@@ -38,7 +38,7 @@ class StringConstants {
   static const String kLeadManagement = "Lead Management";
   static const String kHrDocuments = "HR Documents";
   static const String kOkrAndGoals = "OKR & Goals";
-  static const String kBulletSeparator = " • ";
+  static const String kBulletSeparator = "•";
 
   /// Navigation
   static const String kHome = "Home";
@@ -47,6 +47,17 @@ class StringConstants {
 
   /// Profile
   static const String kMyProfile = "My Profile";
+  static const String kEditProfile = "Edit Profile";
+  static const String kFirstName = "First Name";
+  static const String kFirstNameHint = "Enter first name";
+  static const String kLastName = "Last Name";
+  static const String kLastNameHint = "Enter last name";
+  static const String kPhoneHint = "Enter 10-digit phone number";
+  static const String kSelectProfilePhoto = "Select Profile Photo";
+  static const String kChooseFromGallery = "Choose from Gallery";
+  static const String kTakeAPhoto = "Take a Photo";
+  static const String kNoDetailsAvailable = "No details available.";
+  static const String kSaveChanges = "Save Changes";
   static const String kPersonalAndEmploymentDetails =
       "Personal & Employment Details";
   static const String kAccountAndSecurityActions = "Account & Security Actions";
@@ -84,4 +95,6 @@ class StringConstants {
   static const String kEmailIsRequired = "Email is required";
   static const String kEnterAValidEmail = "Enter a valid email address";
   static const String kFieldRequired = "Field is required";
+  static const String kPhoneNumberMustBe10Digits =
+      "Phone number must be exactly 10 digits";
 }
