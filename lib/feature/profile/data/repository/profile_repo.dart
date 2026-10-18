@@ -1,4 +1,4 @@
-import 'package:core_hr/core/common_model/response_model.dart';
+import 'package:core_hr/core/services/api_service/api_response_model.dart';
 import 'package:core_hr/core/common_model/user_profile_model.dart';
 import 'package:core_hr/core/services/api_service/api_endpoints.dart';
 import 'package:core_hr/core/services/api_service/api_service.dart';

@@ -1,6 +1,6 @@
 import 'package:core_hr/core/common_model/user_profile_model.dart';
 import 'package:core_hr/core/services/api_service/api_service.dart';
-import 'package:core_hr/core/common_model/response_model.dart';
+import 'package:core_hr/core/services/api_service/api_response_model.dart';
 import 'package:core_hr/core/services/api_service/api_endpoints.dart';
 import 'package:core_hr/feature/auth/data/model/login_model.dart';
 
@@ -29,9 +29,8 @@ class AuthRepo {
   /// Fetches the user profile from the server.
   Future<ApiResponseModel> getUserProfile() async {
     final ApiResponseModel resModel = await apiService.getRequest(
-      url: ApiEndPoints.profile,
+      endpoint: ApiEndPoints.profile,
       model: userProfileModelFromJson,
-      showInternetMsg: true
     );
     return resModel;
   }

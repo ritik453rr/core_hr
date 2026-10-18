@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../global/global.dart';
 
 /// A service class for handling location-related operations.
-class LocationService {
+class LocationTrackingService {
   static final _geocoding = Geocoding();
 
   /// Fetches the current position of the device, handling permissions and service status.

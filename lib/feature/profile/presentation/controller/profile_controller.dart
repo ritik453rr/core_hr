@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:core_hr/core/app_enums/app_enums.dart';
 import 'package:core_hr/core/bottomsheets/avatar_picker_bottom_sheet.dart';
-import 'package:core_hr/core/common_model/response_model.dart';
+import 'package:core_hr/core/services/api_service/api_response_model.dart';
 import 'package:core_hr/core/common_model/user_profile_model.dart';
 import 'package:core_hr/core/dialogs/logout_dialog.dart';
 import 'package:core_hr/core/services/media_service/media_service.dart';

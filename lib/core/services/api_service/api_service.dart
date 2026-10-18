@@ -1,18 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:core_hr/core/constants/app_keys.dart';
+
+// import 'package:core_hr/core/constants/app_keys.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'api_auth_interceptor.dart';
+
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../../constants/app_keys.dart';
+import 'api_interceptor.dart';
 import '../../global/global.dart';
-import '../../language/string_constants.dart';
-import '../../common_model/response_model.dart';
+import 'api_response_model.dart';
 
 /// A Singleton onboarding_service class that handles API requests using Dio.
 class ApiService {
   // ---- Singleton Setup ----
   ApiService._internal() {
-    dio.interceptors.add(ApiAuthInterceptor());
+    dio.interceptors.add(ApiInterceptor());
   }
 
   static final ApiService _instance = ApiService._internal();
@@ -23,8 +26,6 @@ class ApiService {
   // ---- Single Dio Instance ----
   final Dio dio = Dio(
     BaseOptions(
-      connectTimeout: const Duration(minutes: 10),
-      receiveTimeout: const Duration(minutes: 10),
       baseUrl: dotenv.env[AppKeys.apiBaseUrl] ?? "",
       headers: {
         "Content-Type": "application/json",
@@ -50,8 +51,8 @@ class ApiService {
       );
     } else {
       final errorMsg = responseData is Map
-          ? (responseData['message'] ?? StringConstants.kSomethingWentWrong)
-          : StringConstants.kSomethingWentWrong;
+          ? (responseData['message'] ?? "Something went wrong")
+          : "Something went wrong";
       return ApiResponseModel(message: errorMsg);
     }
   }
@@ -63,11 +64,11 @@ class ApiService {
     if (e.response != null) {
       final data = e.response!.data;
       final errorMsg = data is Map
-          ? (data["message"] ?? StringConstants.kSomethingWentWrong)
-          : StringConstants.kSomethingWentWrong;
+          ? (data["message"] ?? "Something went wrong")
+          : "Something went wrong";
       return ApiResponseModel(message: errorMsg);
     } else {
-      return ApiResponseModel(message: StringConstants.kSomethingWentWrong);
+      return ApiResponseModel(message: "Something went wrong");
     }
   }
 
@@ -80,7 +81,6 @@ class ApiService {
     File? file,
     String? fileKey = 'file',
     dynamic model,
-    CancelToken? cancelToken,
   }) async {
     if (!await Global.checkInternet()) {
       return ApiResponseModel();
@@ -89,22 +89,20 @@ class ApiService {
       dynamic payload = body;
       if (file != null) {
         final fileName = file.path.split('/').last;
-        final Map<String, dynamic> mapData = body is Map<String, dynamic>
-            ? Map<String, dynamic>.from(body)
-            : <String, dynamic>{};
-        mapData[fileKey ?? 'file'] = await MultipartFile.fromFile(
-          file.path,
-          filename: fileName,
-        );
+        final Map<String, dynamic> mapData = {
+          ...?body,
+          fileKey ?? 'file': await MultipartFile.fromFile(
+            file.path,
+            filename: fileName,
+          ),
+        };
         payload = FormData.fromMap(mapData);
       }
-
       final response = await dio.post(
         endpoint,
         data: payload,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: cancelToken,
       );
       return _handleResponse(response, model);
     } on DioException catch (e) {
@@ -116,21 +114,23 @@ class ApiService {
 
   // ----  GET Request ----
   Future<ApiResponseModel> getRequest({
-    required String url,
+    required String endpoint,
     Map<String, dynamic>? queryParameters,
-    bool showInternetMsg = false,
     dynamic model,
   }) async {
-    if (!await Global.checkInternet(showMsg: showInternetMsg)) {
+    if (!await Global.checkInternet()) {
       return ApiResponseModel();
     }
     try {
-      final response = await dio.get(url, queryParameters: queryParameters);
+      final response = await dio.get(
+        endpoint,
+        queryParameters: queryParameters,
+      );
       return _handleResponse(response, model);
     } on DioException catch (e) {
       return _handleDioError(e);
     } catch (e) {
-      return ApiResponseModel(status: false, message: e.toString());
+      return ApiResponseModel(message: e.toString());
     }
   }
 }
