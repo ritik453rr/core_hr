@@ -1,7 +1,7 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:core_hr/core/routing/app_routes.dart';
-import 'package:core_hr/core/services/location_service/location_tracking_service.dart';
+import 'package:core_hr/core/services/location_service/location_service.dart';
 import 'package:core_hr/feature/home/data/entity/check_in_entity.dart';
 import 'package:core_hr/feature/home/data/repository/home_repo.dart';
 import 'package:geolocator/geolocator.dart';
@@ -34,7 +34,7 @@ class HomeController extends GetxController {
     isLoadingLatLong = true;
     update([HomeBuilderIds.clockInCard]);
 
-    _position = await LocationTrackingService.getCurrentPosition();
+    _position = await LocationService.getCurrentPosition();
 
     if (_position == null) {
       isLoadingLatLong = false;
@@ -45,7 +45,7 @@ class HomeController extends GetxController {
     final latitude = _position!.latitude;
     final longitude = _position!.longitude;
 
-    final Placemark? place = await LocationTrackingService.getPlacemark(
+    final Placemark? place = await LocationService.getPlacemark(
       latitude: latitude,
       longitude: longitude,
     );

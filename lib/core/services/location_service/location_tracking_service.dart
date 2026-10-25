@@ -1,58 +1,78 @@
-import 'package:geocoding/geocoding.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../global/global.dart';
 
-/// A service class for handling location-related operations.
 class LocationTrackingService {
-  static final _geocoding = Geocoding();
+  LocationTrackingService._();
 
-  /// Fetches the current position of the device, handling permissions and service status.
-  static Future<Position?> getCurrentPosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+  static final LocationTrackingService instance = LocationTrackingService._();
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
+  final FlutterBackgroundService _backgroundService =
+      FlutterBackgroundService();
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+  Future<void> startTracking() async {
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        debugPrint('❌ Location services are disabled.');
+        return;
       }
-    }
+      final isRunning = await _backgroundService.isRunning();
 
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.',
-      );
-    }
+      if (isRunning) {
+        _backgroundService.invoke('startTracking');
+        print('✅ Start tracking command sent.');
+        return;
+      }
 
-    return await Geolocator.getCurrentPosition();
+      // 4. Listen for the readiness event BEFORE starting the service.
+      final ready = Completer<void>();
+
+      final subscription = _backgroundService.on('serviceReady').listen((
+        event,
+      ) {
+        if (!ready.isCompleted) {
+          ready.complete();
+        }
+      });
+
+      try {
+        print('Starting background service...');
+        final started = await _backgroundService.startService();
+        if (!started) {
+          print('❌ Failed to start the background service.');
+          return;
+        }
+        // 5. Wait for the background isolate to register its listeners.
+        await ready.future.timeout(const Duration(seconds: 15));
+        // 6. Start location updates.
+        _backgroundService.invoke('startTracking');
+
+        print('✅ Location tracking started.');
+      } on TimeoutException {
+        print('❌ Background service readiness timed out.');
+      } finally {
+        await subscription.cancel();
+      }
+    } catch (error, stackTrace) {
+      print('❌ Failed to start location tracking: $error');
+      print(stackTrace);
+    }
   }
 
-  /// Returns the placemark for the provided latitude and longitude.
-  static Future<Placemark?> getPlacemark({
-    required double latitude,
-    required double longitude,
-  }) async {
+  Future<void> stopTracking() async {
     try {
-      if (!await Global.checkInternet(showMsg: false)) {
-        return null;
+      final isRunning = await _backgroundService.isRunning();
+
+      if (!isRunning) {
+        print('Background service is not running.');
+        return;
       }
-
-      final List<Placemark> placemarks = await _geocoding
-          .placemarkFromCoordinates(latitude, longitude);
-
-      if (placemarks.isEmpty) {
-        return null;
-      }
-
-      return placemarks.first;
-    } catch (e) {
-      return null;
+      _backgroundService.invoke('stopTracking');
+      print('🛑 Stop tracking command sent.');
+    } catch (error) {
+      print('❌ Failed to stop location tracking: $error');
     }
   }
 }
