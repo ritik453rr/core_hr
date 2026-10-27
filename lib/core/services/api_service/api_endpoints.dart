@@ -9,4 +9,5 @@ class ApiEndPoints {
   // Home
   static const String checkIn = "/attendance/check-in";
   static const String checkOut = "/attendance/check-out";
+  static const String attendanceLocation = "/attendance/location";
 }

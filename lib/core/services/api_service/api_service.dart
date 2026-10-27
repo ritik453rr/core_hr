@@ -1,11 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
-// import 'package:core_hr/core/constants/app_keys.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../constants/app_keys.dart';
 import 'api_interceptor.dart';
 import '../../global/global.dart';
@@ -26,7 +22,7 @@ class ApiService {
   // ---- Single Dio Instance ----
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: dotenv.env[AppKeys.apiBaseUrl] ?? "",
+      baseUrl: AppKeys.apiBaseUrl,
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",

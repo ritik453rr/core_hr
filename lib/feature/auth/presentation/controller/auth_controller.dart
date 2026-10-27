@@ -33,7 +33,7 @@ class AuthController extends GetxController {
     super.onInit();
     if (kDebugMode) {
       loginEmailController.text = "Ashishyadav@shreebhargavifoundation.com";
-      loginPasswordController.text = "Test@12345";
+      loginPasswordController.text = "Sbf@23456";
     }
   }
 

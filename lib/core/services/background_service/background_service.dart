@@ -4,16 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
+import '../../global/global.dart';
 
 const String locationNotificationChannelId = 'location_tracking';
 const int locationNotificationId = 888;
 
 /// Initializes the background service.
-///
-/// Call this function from main() before runApp().
 Future<void> initializeBackgroundService() async {
   final service = FlutterBackgroundService();
-
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     locationNotificationChannelId,
     'Location Tracking',
@@ -48,27 +46,23 @@ Future<void> initializeBackgroundService() async {
     ),
   );
 
-  debugPrint("background service configured");
+  Global.logger.i("background service configured");
 }
 
 /// iOS background-fetch handler.
-///
 /// This does not provide continuous location tracking.
 @pragma('vm:entry-point')
 Future<bool> iosBackgroundHandler(ServiceInstance service) async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
-
   return true;
 }
 
 /// Background service entry point.
 @pragma('vm:entry-point')
-void locationServiceEntryPoint(ServiceInstance service) async {
+Future<void> locationServiceEntryPoint(ServiceInstance service) async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
-  debugPrint('✅ Firebase initialized in background isolate.');
-
   StreamSubscription<Position>? positionSubscription;
 
   bool trackingRequested = false;
@@ -76,7 +70,7 @@ void locationServiceEntryPoint(ServiceInstance service) async {
   /// Starts listening to location updates.
   Future<void> startLocationUpdates() async {
     if (positionSubscription != null) {
-      print('📍 Location tracking is already running.');
+      debugPrint('Location tracking is already running.');
       return;
     }
 
@@ -90,6 +84,15 @@ void locationServiceEntryPoint(ServiceInstance service) async {
     );
 
     try {
+      // 1. Check whether location services are enabled.
+      final bool serviceEnabled =
+      await Geolocator.isLocationServiceEnabled();
+
+      if (!serviceEnabled) {
+        debugPrint('Location services are disabled.');
+        return;
+      }
+
       final subscription =
           Geolocator.getPositionStream(
             locationSettings: locationSettings,
@@ -98,13 +101,11 @@ void locationServiceEntryPoint(ServiceInstance service) async {
               onLocationUpdate(position);
             },
             onError: (Object error) {
-              print('❌ Location stream error: $error');
-
+              print('Location stream error: $error');
               positionSubscription = null;
             },
             onDone: () {
               print('Location stream closed.');
-
               positionSubscription = null;
             },
           );
@@ -114,11 +115,9 @@ void locationServiceEntryPoint(ServiceInstance service) async {
         await subscription.cancel();
         return;
       }
-
       positionSubscription = subscription;
     } catch (error, stackTrace) {
       positionSubscription = null;
-
       print('❌ Failed to start location updates: $error');
       print(stackTrace);
     }
@@ -139,7 +138,6 @@ void locationServiceEntryPoint(ServiceInstance service) async {
   // Keep Android tracking in foreground mode.
   if (service is AndroidServiceInstance) {
     service.setAsForegroundService();
-
     service.setForegroundNotificationInfo(
       title: 'Location Tracking',
       content: 'Location tracking is active.',

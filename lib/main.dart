@@ -7,11 +7,14 @@ import 'package:core_hr/core/routing/app_routes.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:toastification/toastification.dart';
 
+import 'core/services/background_service/background_service.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await dotenv.load(fileName: ".env");
-  runApp(const MyApp());//
+  await initializeBackgroundService();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

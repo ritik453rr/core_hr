@@ -2,6 +2,7 @@ import 'package:core_hr/core/services/api_service/api_response_model.dart';
 import 'package:core_hr/core/services/api_service/api_service.dart';
 import 'package:core_hr/core/services/api_service/api_endpoints.dart';
 import 'package:core_hr/feature/home/data/entity/check_in_entity.dart';
+import 'package:core_hr/feature/home/data/entity/location_update_entity.dart';
 
 /// Repository for handling home and attendance-related API operations.
 class HomeRepo {
@@ -13,8 +14,20 @@ class HomeRepo {
     required bool checkIn,
   }) async {
     final ApiResponseModel responseModel = await apiService.postRequest(
-      endpoint: checkIn ? ApiEndPoints.checkIn : ApiEndPoints.checkOut,
+      endpoint: checkIn
+          ? ApiEndPoints.checkIn
+          : ApiEndPoints.attendanceLocation,
       body: entity.toJson(),
+    );
+    return responseModel;
+  }
+
+  Future<ApiResponseModel> updateLocation({
+    required LocationUpdateEntity locationUpdateEntity,
+  }) async {
+    final ApiResponseModel responseModel = await apiService.postRequest(
+      endpoint: ApiEndPoints.attendanceLocation,
+      body: locationUpdateEntity.toJson(),
     );
     return responseModel;
   }
