@@ -76,7 +76,7 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
 
     trackingRequested = true;
 
-    print('📍 Starting location updates...');
+    debugPrint('📍 Starting location updates...');
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
@@ -101,11 +101,11 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
               onLocationUpdate(position);
             },
             onError: (Object error) {
-              print('Location stream error: $error');
+              debugPrint('Location stream error: $error');
               positionSubscription = null;
             },
             onDone: () {
-              print('Location stream closed.');
+              debugPrint('Location stream closed.');
               positionSubscription = null;
             },
           );
@@ -116,10 +116,9 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
         return;
       }
       positionSubscription = subscription;
-    } catch (error, stackTrace) {
+    } catch (error) {
       positionSubscription = null;
-      print('❌ Failed to start location updates: $error');
-      print(stackTrace);
+      debugPrint('❌ Failed to start location updates: $error');
     }
   }
 
@@ -132,7 +131,7 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
 
     await subscription?.cancel();
 
-    print('🛑 Location tracking stopped.');
+    debugPrint('🛑 Location tracking stopped.');
   }
 
   // Keep Android tracking in foreground mode.
@@ -161,18 +160,17 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
   // Tell the UI isolate that the service is ready to receive commands.
   service.invoke('serviceReady');
 
-  print('✅ Background service initialized.');
+  debugPrint('✅ Background service initialized.');
 }
 
 Future<void> onLocationUpdate(Position position) async {
   try {
-    print('📍 New location received');
-    print('Latitude: ${position.latitude}');
-    print('Longitude: ${position.longitude}');
-    print('Accuracy: ${position.accuracy}');
-    print('Timestamp: ${position.timestamp}');
-  } catch (error, stackTrace) {
-    print('❌ Failed to send location to Firestore: $error');
-    print(stackTrace);
+    debugPrint('📍 New location received');
+    debugPrint('Latitude: ${position.latitude}');
+    debugPrint('Longitude: ${position.longitude}');
+    debugPrint('Accuracy: ${position.accuracy}');
+    debugPrint('Timestamp: ${position.timestamp}');
+  } catch (error) {
+    debugPrint('❌ Failed to send location to Firestore: $error');
   }
 }

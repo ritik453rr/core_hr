@@ -24,9 +24,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final canPop = ModalRoute.of(context)?.canPop ?? false;
+    final shouldShowBack = showBackButton && canPop;
+
     return AppBar(
       automaticallyImplyLeading: false,
-      leading: showBackButton
+      leading: shouldShowBack
           ? IconButton(
               icon: const Icon(
                 Icons.arrow_back_ios,
@@ -36,7 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: onBackPressed ?? () => Get.back(),
             )
           : null,
-      titleSpacing: showBackButton ? 0 : 16,
+      titleSpacing: shouldShowBack ? 0 : 16,
       title: AppText(
         title,
         style: AppTextStyle.bold18White,

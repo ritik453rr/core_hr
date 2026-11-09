@@ -8,10 +8,6 @@ import '../../feature/dashboard/presentation/page/dashboard_page.dart';
 import '../../feature/dashboard/presentation/controller/dashboard_controller.dart';
 import '../../feature/home/presentation/page/home_page.dart';
 import '../../feature/home/presentation/controller/home_controller.dart';
-import '../../feature/my_team/presentation/page/my_team_page.dart';
-import '../../feature/my_team/presentation/controller/my_team_controller.dart';
-import '../../feature/field_tracking/presentation/page/field_tracking_page.dart';
-import '../../feature/field_tracking/presentation/controller/field_tracking_controller.dart';
 import '../../feature/profile/presentation/page/profile_page.dart';
 import '../../feature/profile/presentation/controller/profile_controller.dart';
 import '../../feature/profile/presentation/page/edit_profile_page.dart';
@@ -47,8 +43,6 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.lazyPut(() => DashboardController(), fenix: true);
         Get.lazyPut(() => HomeController(), fenix: true);
-        Get.lazyPut(() => FieldTrackingController(), fenix: true);
-        Get.lazyPut(() => MyTeamController(), fenix: true);
         Get.put(ProfileController());
       }),
       transition: Transition.fadeIn,
@@ -57,18 +51,6 @@ class AppPages {
     GetPage(
       name: AppRoutes.home,
       page: () => const HomePage(),
-      transition: Transition.rightToLeftWithFade,
-      transitionDuration: _defaultDuration,
-    ),
-    GetPage(
-      name: AppRoutes.myTeam,
-      page: () => const MyTeamPage(),
-      transition: Transition.rightToLeftWithFade,
-      transitionDuration: _defaultDuration,
-    ),
-    GetPage(
-      name: AppRoutes.fieldTracking,
-      page: () => const FieldTrackingPage(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: _defaultDuration,
     ),

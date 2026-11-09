@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:core_hr/core/constants/app_colors.dart';
 import 'package:core_hr/core/language/string_constants.dart';
-import '../../../field_tracking/presentation/page/field_tracking_page.dart';
 import '../../../home/presentation/page/home_page.dart';
-import '../../../my_team/presentation/page/my_team_page.dart';
+import '../../../profile/presentation/page/profile_page.dart';
 import '../controller/dashboard_controller.dart';
 
 /// Main dashboard page that hosts the bottom navigation and top-level feature screens.
@@ -20,8 +19,7 @@ class DashboardPage extends GetView<DashboardController> {
           index: controller.selectedNavIndex,
           children: const [
             HomePage(),
-            FieldTrackingPage(),
-            MyTeamPage(),
+            ProfilePage(),
           ],
         ),
       ),
@@ -46,12 +44,8 @@ class DashboardPage extends GetView<DashboardController> {
               label: StringConstants.kHome,
             ),
             _buildNavItem(
-              icon: Icons.map_rounded,
-              label: StringConstants.kTracking,
-            ),
-            _buildNavItem(
-              icon: Icons.group_rounded,
-              label: StringConstants.kMyTeam,
+              icon: Icons.person_rounded,
+              label: StringConstants.kMyProfile,
             ),
           ],
         ),

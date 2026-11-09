@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:core_hr/core/app_enums/app_enums.dart';
 import 'package:core_hr/core/bottomsheets/avatar_picker_bottom_sheet.dart';
 import 'package:core_hr/core/services/api_service/api_response_model.dart';
 import 'package:core_hr/core/common_model/user_profile_model.dart';
@@ -82,8 +81,7 @@ class ProfileController extends GetxController {
         userProfileData = userProfileModel.userProfileData;
         prefillEditProfilePage();
         final homeController = Get.find<HomeController>();
-        final status = userProfileData?.status?.toLowerCase();
-        homeController.isCheckIn = status == ShiftStatus.active.name;
+        homeController.isCheckIn = userProfileData?.isCheckedIn??false;
         AppStorage.saveUserProfile(userProfileData);
       }
     } else {

@@ -66,15 +66,14 @@ class LocationTrackingService {
         // 6. Start location updates.
         _backgroundService.invoke('startTracking');
 
-        print('✅ Location tracking started.');
+        debugPrint('✅ Location tracking started.');
       } on TimeoutException {
         Global.logger.e('Background service readiness timed out.');
       } finally {
         await subscription.cancel();
       }
-    } catch (error, stackTrace) {
+    } catch (error) {
       Global.logger.e('Failed to start location tracking: $error');
-      print(stackTrace);
     }
   }
 
@@ -83,11 +82,11 @@ class LocationTrackingService {
       final isRunning = await _backgroundService.isRunning();
 
       if (!isRunning) {
-        print('Background service is not running.');
+        Global.logger.i('Background service is not running.');
         return;
       }
       _backgroundService.invoke('stopTracking');
-      print('🛑 Stop tracking command sent.');
+      debugPrint('🛑 Stop tracking command sent.');
     } catch (error) {
       Global.logger.e('Failed to stop location tracking: $error');
     }

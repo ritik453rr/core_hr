@@ -16,7 +16,7 @@ class HomeRepo {
     final ApiResponseModel responseModel = await apiService.postRequest(
       endpoint: checkIn
           ? ApiEndPoints.checkIn
-          : ApiEndPoints.attendanceLocation,
+          : ApiEndPoints.checkOut,
       body: entity.toJson(),
     );
     return responseModel;

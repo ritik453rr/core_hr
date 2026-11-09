@@ -15,76 +15,24 @@ enum HomeBuilderIds { clockInCard, homeAppBar }
 class HomeController extends GetxController {
   // Instances.......
   final _homeRepo = HomeRepo();
-  Position? _position;
 
   // Variables
   bool isCheckIn = false;
-  bool isLoadingLatLong = false;
   bool isClockInLoading = false;
-  String currentAddress = '';
 
-  @override
-  void onInit() {
-    super.onInit();
-    getUserAddress();
-  }
-
-  /// Fetches the current latitude, longitude, and address.
-  Future<void> getUserAddress() async {
-    isLoadingLatLong = true;
-    update([HomeBuilderIds.clockInCard]);
-
-    _position = await LocationService.getCurrentPosition();
-
-    if (_position == null) {
-      isLoadingLatLong = false;
-      update([HomeBuilderIds.clockInCard]);
-      return;
-    }
-
-    final latitude = _position!.latitude;
-    final longitude = _position!.longitude;
-
-    final Placemark? place = await LocationService.getPlacemark(
-      latitude: latitude,
-      longitude: longitude,
-    );
-
-    if (place != null) {
-      currentAddress =
-          [place.street, place.subLocality, place.postalCode, place.country]
-              .where((value) {
-                return value != null && value.trim().isNotEmpty;
-              })
-              .join(', ');
-    }
-
-    isLoadingLatLong = false;
-    update([HomeBuilderIds.clockInCard]);
-  }
-
-  void onTapProfile() {
-    Get.toNamed(AppRoutes.profile);
-  }
-
-  /// Toggles the clock-in status.
+  /// Performs the check-in or check-out operation via the repository.
   Future<void> toggleClockIn() async {
-    if (_position == null) {
+    if(isClockInLoading) return;
+    isClockInLoading = true;
+    update([HomeBuilderIds.clockInCard]);
+    final position = await LocationService.getCurrentPosition();
+    if (position == null) {
       AppToast.showToast(message: 'Unable to fetch your current location.');
       return;
     }
-
-    checkIn();
-  }
-
-  /// Performs the check-in or check-out operation via the repository.
-  Future<void> checkIn() async {
-    isClockInLoading = true;
-    update([HomeBuilderIds.clockInCard]);
     final checkInEntity = CheckInEntity(
-      latitude: _position!.latitude,
-      longitude: _position!.longitude,
-      address: currentAddress,
+      latitude: position.latitude,
+      longitude: position.longitude,
     );
     final ApiResponseModel responseModel = await _homeRepo.checkInCheckOut(
       entity: checkInEntity,
@@ -105,9 +53,5 @@ class HomeController extends GetxController {
       message: '$serviceName module integration coming soon.',
       isSuccess: true,
     );
-  }
-
-  Future<void> refreshHomePage() async {
-    await Future.delayed(const Duration(seconds: 5));
   }
 }

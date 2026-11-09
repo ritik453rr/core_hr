@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
 import '../../global/global.dart';
 import '../../storage/app_storage.dart';
 
@@ -11,21 +10,23 @@ class ApiInterceptor extends Interceptor {
     if (token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
-    Global.logger.i('--> ${options.method.toUpperCase()} ${options.uri}');
-    Global.logger.d('Headers: ${options.headers}');
-    if (options.data != null) {
-      Global.logger.d('Body: ${options.data}');
-    }
-
+    Global.logger.i('''
+      REQUEST
+      METHOD:${options.method.toUpperCase()}
+      URL:${options.uri}
+      HEADERS:${options.headers}
+      BODY: ${options.data}''');
     handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    Global.logger.i(
-      '<-- ${response.statusCode} ${response.requestOptions.uri}',
-    );
-    Global.logger.d('Response Data: ${response.data}');
+    Global.logger.i('''
+      RESPONSE
+      STATUS CODE:${response.statusCode}
+      URL:${response.requestOptions.uri}
+      RESPONSE DATA:${response.data}
+       ''');
     handler.next(response);
   }
 

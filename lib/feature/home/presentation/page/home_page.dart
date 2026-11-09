@@ -18,40 +18,36 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: HomeAppBar(onTapProfile: controller.onTapProfile),
-      body: AppRefreshIndicator(
-        onRefresh: () async {
-          await controller.refreshHomePage();
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppConstants.hzSpace,
-            vertical: 30,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClockInCard(onToggleClockIn: controller.toggleClockIn),
-              24.h,
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppText(
-                    StringConstants.kHrAndFieldApplications,
-                    style: AppTextStyle.bold17,
-                  ),
-                  AppText(
-                    StringConstants.kAllServices,
-                    style: AppTextStyle.regular12Grey,
-                  ),
-                ],
-              ),
-              12.h,
-              ServicesGrid(onTapService: controller.onTapService),
-              20.h,
-            ],
-          ),
+      appBar: const HomeAppBar(),
+
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppConstants.hzSpace,
+          vertical: 30,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClockInCard(onToggleClockIn: controller.toggleClockIn),
+            24.h,
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppText(
+                  StringConstants.kHrAndFieldApplications,
+                  style: AppTextStyle.bold17,
+                ),
+                AppText(
+                  StringConstants.kAllServices,
+                  style: AppTextStyle.regular12Grey,
+                ),
+              ],
+            ),
+            12.h,
+            ServicesGrid(onTapService: controller.onTapService),
+            20.h,
+          ],
         ),
       ),
     );

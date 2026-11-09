@@ -26,10 +26,11 @@ class StringConstants {
   static const String kUnknown = "Unknown";
   static const String kDailyWorkShift = "DAILY WORK SHIFT";
   static const String kActiveShiftInProgress = "Active Shift in Progress";
-  static const String kNotClockedInToday = "Not Clocked In Today";
+  static const String kNotClockedIn = "Not Clocked In";
   static const String kOffline = "OFFLINE";
+  static const String kOnline = "'ONLINE'";
   static const String kClockOut = "CLOCK OUT";
-  static const String kClockInWithLocation = "CLOCK IN WITH LOCATION";
+  static const String kClockInWithLocation = "CLOCK IN";
   static const String kHrAndFieldApplications = "HR & Field Applications";
   static const String kAllServices = "All Services";
   static const String kHolidays = "Holidays";
@@ -42,8 +43,6 @@ class StringConstants {
 
   /// Navigation
   static const String kHome = "Home";
-  static const String kTracking = "Tracking";
-  static const String kMyTeam = "My Team";
 
   /// Profile
   static const String kMyProfile = "My Profile";

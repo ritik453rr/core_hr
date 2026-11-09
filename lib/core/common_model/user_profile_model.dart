@@ -41,6 +41,7 @@ class UserProfileData {
   String? branch;
   String? manager;
   Shift? shift;
+  bool ? isCheckedIn;
 
   UserProfileData({
     this.id,
@@ -59,6 +60,7 @@ class UserProfileData {
     this.branch,
     this.manager,
     this.shift,
+    this.isCheckedIn,
   });
 
   factory UserProfileData.fromJson(Map<String, dynamic> json) => UserProfileData(
@@ -78,6 +80,7 @@ class UserProfileData {
     branch: json["branch"],
     manager: json["manager"],
     shift: json["shift"] == null ? null : Shift.fromJson(json["shift"]),
+    isCheckedIn: json["is_checked_in"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -97,6 +100,7 @@ class UserProfileData {
     "branch": branch,
     "manager": manager,
     "shift": shift?.toJson(),
+    "is_checked_in":isCheckedIn,
   };
 }
 

@@ -12,9 +12,8 @@ import '../controller/home_controller.dart';
 
 /// Custom app bar for the Home screen featuring user profile and notifications.
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final VoidCallback? onTapProfile;
 
-  const HomeAppBar({super.key, this.onTapProfile});
+  const HomeAppBar({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(70);
@@ -36,36 +35,33 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               profile?.fullName ?? profile?.firstName ?? StringConstants.kNA;
           final role = profile?.role ?? "";
           final empCode = profile?.employeeCode ?? "";
-          return InkWell(
-            onTap: onTapProfile,
-            borderRadius: BorderRadius.circular(12),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AppNetworkImage(imgUrl: photoUrl),
-                12.w,
-                AppShimmer(
-                  enable: profileCtrl.isLoadingProfile,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText(
-                        name,
-                        style: AppTextStyle.bold16.copyWith(
-                          color: Colors.white,
-                        ),
+
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppNetworkImage(imgUrl: photoUrl),
+              12.w,
+              AppShimmer(
+                enable: profileCtrl.isLoadingProfile,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                      name,
+                      style: AppTextStyle.bold16.copyWith(
+                        color: Colors.white,
                       ),
-                      AppText(
-                        "$role ${StringConstants.kBulletSeparator} $empCode",
-                        style: AppTextStyle.regular11White60.copyWith(
-                          color: const Color(0xFF94A3B8),
-                        ),
+                    ),
+                    AppText(
+                      "$role ${StringConstants.kBulletSeparator} $empCode",
+                      style: AppTextStyle.regular11White60.copyWith(
+                        color: const Color(0xFF94A3B8),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       ),
