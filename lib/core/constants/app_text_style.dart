@@ -137,6 +137,11 @@ class AppTextStyle {
 
   // --- Blue / Accent Styles ---
 
+  static const TextStyle semiBold14Blue = TextStyle(
+    fontSize: AppFontSize.font14,
+    fontWeight: FontWeight.w600,
+  );
+
   static const TextStyle semiBold12Blue = TextStyle(
     color: AppColors.c2563EB,
     fontSize: AppFontSize.font12,

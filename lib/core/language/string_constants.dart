@@ -90,6 +90,12 @@ class StringConstants {
   static const String kCancel = "Cancel";
   static const String kLogout = "Logout";
 
+  /// Location Permission Dialog
+  static const String kLocationPermissionTitle = "Location Permission Required";
+  static const String kLocationPermissionMessage =
+      "Permanent location access is required for attendance and tracking. Please enable 'Allow all the time' location permission in your device settings.";
+  static const String kOpenSettings = "Open Settings";
+
   /// Validators
   static const String kEmailIsRequired = "Email is required";
   static const String kEnterAValidEmail = "Enter a valid email address";

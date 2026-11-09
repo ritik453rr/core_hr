@@ -86,7 +86,10 @@ class ProfileHeaderCard extends StatelessWidget {
                     ),
                     8.w,
                     InkWell(
-                      onTap: () => Get.toNamed(AppRoutes.editProfile),
+                      onTap: (){
+                        controller.prefillEditProfilePage();
+                        Get.toNamed(AppRoutes.editProfile);
+                      },
                       borderRadius: BorderRadius.circular(18),
                       child: Container(
                         padding: const EdgeInsets.all(6),

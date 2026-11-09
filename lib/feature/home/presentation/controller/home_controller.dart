@@ -1,3 +1,4 @@
+import 'package:core_hr/core/services/location_service/location_tracking_service.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:core_hr/core/routing/app_routes.dart';
@@ -40,6 +41,12 @@ class HomeController extends GetxController {
     );
     if (responseModel.status) {
       isCheckIn = !isCheckIn;
+      if(isCheckIn){
+        LocationTrackingService.instance.startTracking();
+      }else{
+        LocationTrackingService.instance.stopTracking();
+
+      }
     } else {
       AppToast.showToast(message: responseModel.message);
     }

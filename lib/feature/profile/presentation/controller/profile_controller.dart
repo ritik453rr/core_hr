@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:core_hr/core/services/location_service/location_service.dart';
+import 'package:core_hr/core/services/location_service/location_tracking_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -53,7 +55,6 @@ class ProfileController extends GetxController {
   /// Loads user profile from local storage and updates UI state.
   void getLocalStorageProfile() {
     userProfileData = AppStorage.getUserProfile();
-    prefillEditProfilePage();
   }
 
   /// Prefills edit profile text fields with user profile data.
@@ -77,12 +78,18 @@ class ProfileController extends GetxController {
     final ApiResponseModel resModel = await authRepo.getUserProfile();
     if (resModel.status) {
       final UserProfileModel userProfileModel = resModel.data;
+      bool isCheckedIn = false;
       if (userProfileModel.userProfileData != null) {
         userProfileData = userProfileModel.userProfileData;
-        prefillEditProfilePage();
-        final homeController = Get.find<HomeController>();
-        homeController.isCheckIn = userProfileData?.isCheckedIn??false;
         AppStorage.saveUserProfile(userProfileData);
+        final homeController = Get.find<HomeController>();
+        isCheckedIn = userProfileData?.isCheckedIn ?? false;
+        homeController.isCheckIn = isCheckedIn;
+      }
+      if (isCheckedIn) {
+        LocationTrackingService.instance.startTracking();
+      } else {
+        LocationTrackingService.instance.stopTracking();
       }
     } else {
       AppToast.showToast(message: resModel.message);
