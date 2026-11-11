@@ -4,18 +4,19 @@ import '../../global/global.dart';
 
 /// A service class for handling location-related operations.
 class LocationService {
-
   /// Fetches the current position of the device, handling permissions and service status.
   static Future<Position?> getCurrentPosition() async {
-    final bool serviceEnabled =
-        await AppPermissionService.isPermanentLocationPermissionGranted();
+    try {
+      final bool permissionStatus =
+          await AppPermissionService.isPermanentLocationPermissionGranted();
 
-    if (!serviceEnabled) {
-      Global.logger.e(
-        "Unable to get current position:permanent location is not enabled",
-      );
+      if (!permissionStatus) {
+        return null;
+      }
+      return await Geolocator.getCurrentPosition();
+    } catch (e) {
+      Global.logger.e(e.toString());
       return null;
     }
-    return await Geolocator.getCurrentPosition();
   }
 }

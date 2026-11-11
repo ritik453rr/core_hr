@@ -32,6 +32,10 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
         await AppPermissionService.isPermanentLocationPermissionGranted();
     if (!isPermission) {
       showLocationPermissionDialog();
+    } else {
+      if (Get.isDialogOpen == true) {
+        Get.back();
+      }
     }
   }
 

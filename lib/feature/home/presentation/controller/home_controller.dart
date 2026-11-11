@@ -1,3 +1,4 @@
+import 'package:core_hr/core/global/global.dart';
 import 'package:core_hr/core/services/location_service/location_tracking_service.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
@@ -23,35 +24,39 @@ class HomeController extends GetxController {
 
   /// Performs the check-in or check-out operation via the repository.
   Future<void> toggleClockIn() async {
-    if(isClockInLoading) return;
+    if (isClockInLoading) return;
     isClockInLoading = true;
     update([HomeBuilderIds.clockInCard]);
-    final position = await LocationService.getCurrentPosition();
-    if (position == null) {
-      AppToast.showToast(message: 'Unable to fetch your current location.');
-      return;
-    }
-    final checkInEntity = CheckInEntity(
-      latitude: position.latitude,
-      longitude: position.longitude,
-    );
-    final ApiResponseModel responseModel = await _homeRepo.checkInCheckOut(
-      entity: checkInEntity,
-      checkIn: !isCheckIn,
-    );
-    if (responseModel.status) {
-      isCheckIn = !isCheckIn;
-      if(isCheckIn){
-        LocationTrackingService.instance.startTracking();
-      }else{
-        LocationTrackingService.instance.stopTracking();
-
+    try {
+      final Position? position = await LocationService.getCurrentPosition();
+      if (position == null) {
+        AppToast.showToast(message: 'Unable to fetch your current location.');
+        return;
       }
-    } else {
-      AppToast.showToast(message: responseModel.message);
+      final checkInEntity = CheckInEntity(
+        latitude: position.latitude,
+        longitude: position.longitude,
+      );
+      final ApiResponseModel responseModel = await _homeRepo.checkInCheckOut(
+        entity: checkInEntity,
+        checkIn: !isCheckIn,
+      );
+      if (responseModel.status) {
+        isCheckIn = !isCheckIn;
+        if (isCheckIn) {
+          LocationTrackingService.instance.startLocationBgService();
+        } else {
+          LocationTrackingService.instance.stopBackgroundService();
+        }
+      } else {
+        AppToast.showToast(message: responseModel.message);
+      }
+    } catch (e) {
+      Global.logger.e(e.toString());
+    } finally {
+      isClockInLoading = false;
+      update([HomeBuilderIds.clockInCard]);
     }
-    isClockInLoading = false;
-    update([HomeBuilderIds.clockInCard]);
   }
 
   /// Handles tap on HR service modules.

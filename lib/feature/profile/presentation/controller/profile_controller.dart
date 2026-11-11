@@ -87,9 +87,9 @@ class ProfileController extends GetxController {
         homeController.isCheckIn = isCheckedIn;
       }
       if (isCheckedIn) {
-        LocationTrackingService.instance.startTracking();
+        LocationTrackingService.instance.startLocationBgService();
       } else {
-        LocationTrackingService.instance.stopTracking();
+        LocationTrackingService.instance.stopBackgroundService();
       }
     } else {
       AppToast.showToast(message: resModel.message);

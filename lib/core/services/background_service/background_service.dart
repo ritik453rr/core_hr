@@ -11,6 +11,63 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../global/global.dart';
 
+class BackgroundServiceManager {
+  BackgroundServiceManager._();
+
+  static final BackgroundServiceManager instance = BackgroundServiceManager._();
+
+  final FlutterBackgroundService _service = FlutterBackgroundService();
+
+  Future<bool> isRunning() {
+    return _service.isRunning();
+  }
+
+
+  // Start background service
+  Future<bool> startBackgroundService() async {
+    try {
+      if (await isRunning()) {
+        Global.logger.i('Background service is already running.');
+        return true;
+      }
+      final started = await _service.startService();
+
+      if (started) {
+        Global.logger.i('Background service started successfully.');
+      } else {
+        Global.logger.e('Failed to start background service.');
+      }
+      return started;
+    } catch (error) {
+      Global.logger.e('Error starting background service: $error');
+      return false;
+    }
+  }
+
+  void sendEvent(String event) {
+    _service.invoke(event);
+  }
+
+  Stream<Map<String, dynamic>?> listen(String event) {
+    return _service.on(event);
+  }
+
+
+  // Stop background service
+  Future<void> stopBackgroundService() async {
+    try {
+      if (!await isRunning()) {
+        Global.logger.i('Background service is not running.');
+        return;
+      }
+      sendEvent('stopService');
+      Global.logger.i("Background service stopped");
+    } catch (error) {
+      Global.logger.e('Error stopping background service: $error');
+    }
+  }
+}
+
 const String locationNotificationChannelId = 'location_tracking';
 const int locationNotificationId = 888;
 
@@ -26,18 +83,18 @@ String _formatDateTime(DateTime dateTime) {
 }
 
 /// Initializes the background service.
-Future<void> initializeBackgroundService() async {
+Future<void> configuredBackgroundService() async {
   final service = FlutterBackgroundService();
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     locationNotificationChannelId,
-    'Location Tracking',
-    description: 'Notification displayed while location tracking is active.',
+    'MY FOREGROUND SERVICE',
+    description: 'This channel is used for important notifications.',
     importance: Importance.low,
   );
 
-  final notifications = FlutterLocalNotificationsPlugin();
+  final localNotificationPlugin = FlutterLocalNotificationsPlugin();
 
-  await notifications
+  await localNotificationPlugin
       .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin
       >()
@@ -50,10 +107,9 @@ Future<void> initializeBackgroundService() async {
       autoStartOnBoot: false,
       isForegroundMode: true,
       notificationChannelId: locationNotificationChannelId,
-      initialNotificationTitle: 'Location Tracking',
-      initialNotificationContent: 'Preparing location tracking...',
+      initialNotificationTitle: 'Background Tracking',
+      initialNotificationContent: 'Background tracking is running',
       foregroundServiceNotificationId: locationNotificationId,
-      foregroundServiceTypes: [AndroidForegroundType.location],
     ),
     iosConfiguration: IosConfiguration(
       autoStart: false,
@@ -90,7 +146,6 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
   Timer? apiTimer;
   DateTime? lastApiCallTime;
   Position? latestPosition;
-
   bool trackingRequested = false;
 
   void triggerLocationApiCall(Position position) {
@@ -104,9 +159,7 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
       Global.logger.i('Location tracking is already running.');
       return;
     }
-
     trackingRequested = true;
-
     Global.logger.i('Starting location updates...');
 
     const LocationSettings locationSettings = LocationSettings(
@@ -133,7 +186,8 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
               latestPosition = position;
               final now = DateTime.now();
               if (lastApiCallTime == null ||
-                  now.difference(lastApiCallTime!) >= const Duration(minutes: 1)) {
+                  now.difference(lastApiCallTime!) >=
+                      const Duration(minutes: 1)) {
                 triggerLocationApiCall(position);
               }
             },
@@ -182,7 +236,6 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
     apiTimer = null;
     lastApiCallTime = null;
     latestPosition = null;
-
     final subscription = positionSubscription;
     positionSubscription = null;
     await subscription?.cancel();
@@ -192,10 +245,10 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
   // Keep Android tracking in foreground mode.
   if (service is AndroidServiceInstance) {
     service.setAsForegroundService();
-    service.setForegroundNotificationInfo(
-      title: 'Location Tracking',
-      content: 'Location tracking is active.',
-    );
+    // service.setForegroundNotificationInfo(
+    //   title: 'Location Tracking',
+    //   content: 'Location tracking is active.',
+    // );
   }
 
   // Register listeners before announcing readiness.
@@ -214,13 +267,14 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
 
   // Tell the UI isolate that the service is ready to receive commands.
   service.invoke('serviceReady');
-
   debugPrint('Background service initialized.');
 }
 
 Future<void> onLocationUpdate(Position position) async {
   try {
-    debugPrint('New location received: ${position.latitude}, ${position.longitude}');
+    debugPrint(
+      'New location received: ${position.latitude}, ${position.longitude}',
+    );
 
     final locationUpdateEntity = LocationUpdateEntity(
       latitude: position.latitude,
@@ -234,9 +288,13 @@ Future<void> onLocationUpdate(Position position) async {
     );
 
     if (response.status) {
-      Global.logger.i('Background location posted successfully: ${response.message}');
+      Global.logger.i(
+        'Background location posted successfully: ${response.message}',
+      );
     } else {
-      Global.logger.e('Failed to post background location: ${response.message}');
+      Global.logger.e(
+        'Failed to post background location: ${response.message}',
+      );
     }
   } catch (error) {
     Global.logger.e('Failed to process location: $error');

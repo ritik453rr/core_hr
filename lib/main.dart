@@ -13,7 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await dotenv.load(fileName: ".env");
-  await initializeBackgroundService();
+  await configuredBackgroundService();
   runApp(const MyApp());
 }
 
