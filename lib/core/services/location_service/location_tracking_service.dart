@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+
+import '../../../feature/home/data/entity/location_update_entity.dart';
+import '../../../feature/home/data/repository/home_repo.dart';
 import '../../global/global.dart';
 import '../app_permission_service/app_permission_service.dart';
-import '../background_service/background_service.dart';
+import '../background_service/background_service_manager.dart';
 
 class LocationTrackingService {
   LocationTrackingService._();
@@ -13,6 +18,8 @@ class LocationTrackingService {
       BackgroundServiceManager.instance;
 
   bool _starting = false;
+  StreamSubscription<Position>? positionSubscription;
+  bool trackingRequested = false;
 
   Future<void> startLocationBgService() async {
     if (_starting) {
@@ -110,4 +117,108 @@ class LocationTrackingService {
   Future<void> stopBackgroundService() async {
     await _backgroundService.stopBackgroundService();
   }
+
+  /// Starts listening to location updates.
+  Future<void> startLocationUpdates() async {
+    if (positionSubscription != null) {
+      Global.printInfo('Location tracking is already running.');
+      return;
+    }
+    trackingRequested = true;
+    Global.printInfo('Starting location updates...');
+
+    try {
+      final bool isPermanentLocationEnable =
+      await AppPermissionService.isPermanentLocationPermissionGranted();
+
+      if (!isPermanentLocationEnable) {
+        Global.logger.e(
+          'Unable to start location tracking.\n Permanent location disabled',
+        );
+        return;
+      }
+
+      final subscription =
+      Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 0,
+        ),
+      ).listen(
+            (Position position) {
+          onLocationUpdate(position);
+        },
+        onError: (Object error) {
+          Global.printError('Location stream error: $error');
+          positionSubscription = null;
+        },
+        onDone: () {
+          Global.printInfo('Location stream closed.');
+          positionSubscription = null;
+        },
+      );
+
+      // The subscription may have been stopped while being initialized.
+      if (!trackingRequested) {
+        await subscription.cancel();
+        return;
+      }
+      positionSubscription = subscription;
+    } catch (error) {
+      positionSubscription = null;
+      Global.printError('Failed to start location updates: $error');
+    }
+  }
+
+  /// Stops the location stream without stopping the service.
+  Future<void> stopLocationUpdates() async {
+    trackingRequested = false;
+    final subscription = positionSubscription;
+    positionSubscription = null;
+    await subscription?.cancel();
+    Global.printInfo('Location tracking stopped.');
+  }
+
+  Future<void> onLocationUpdate(Position position) async {
+    try {
+      debugPrint(
+        'New location received: ${position.latitude}, ${position.longitude}',
+      );
+
+      final locationUpdateEntity = LocationUpdateEntity(
+        latitude: position.latitude,
+        longitude: position.longitude,
+        accuracy: position.accuracy,
+        recordedAt: _formatDateTime(position.timestamp),
+      );
+
+      final response = await HomeRepo().updateLocation(
+        locationUpdateEntity: locationUpdateEntity,
+      );
+
+      if (response.status) {
+        Global.printSuccessMsg(
+          'Background location posted successfully: ${response.message}',
+        );
+      } else {
+        Global.printError(
+          'Failed to post background location: ${response.message}',
+        );
+      }
+    } catch (error) {
+      Global.logger.e('Failed to process location: $error');
+    }
+  }
+
+  /// Formats DateTime to "YYYY-MM-DD HH:mm:ss" string format.
+  String _formatDateTime(DateTime dateTime) {
+    final year = dateTime.year.toString().padLeft(4, '0');
+    final month = dateTime.month.toString().padLeft(2, '0');
+    final day = dateTime.day.toString().padLeft(2, '0');
+    final hour = dateTime.hour.toString().padLeft(2, '0');
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final second = dateTime.second.toString().padLeft(2, '0');
+    return '$year-$month-$day $hour:$minute:$second';
+  }
+
 }

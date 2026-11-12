@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import '../common_widgets/app_toast.dart';
@@ -31,4 +32,27 @@ class Global {
       return false;
     }
   }
+
+  static void printSuccessMsg(String? value){
+    if(value==null || value.isEmpty){
+      return;
+    }
+    debugPrint("✅ ✅ ✅ $value");
+  }
+
+
+  static void printError(String? value){
+    if(value==null || value.isEmpty){
+      return;
+    }
+    debugPrint("❌ ❌ ❌ $value");
+  }
+
+  static void printInfo(String? value){
+    if(value==null || value.isEmpty){
+      return;
+    }
+    debugPrint("🔵 🔵 🔵 $value");
+  }
+
 }
