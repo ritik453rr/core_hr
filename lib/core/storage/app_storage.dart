@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:core_hr/core/common_model/user_profile_model.dart';
 import 'package:core_hr/core/routing/app_routes.dart';
+import 'package:core_hr/core/services/background_service/background_service_manager.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -44,8 +45,9 @@ class AppStorage {
   }
 
   /// Clears user session / logout
-  static void logOut() {
-    _storage.erase();
+  static Future<void> logout() async {
+    await BackgroundServiceManager.instance.stopBackgroundService();
+    await _storage.erase();
     Get.offAllNamed(AppRoutes.login);
   }
 }

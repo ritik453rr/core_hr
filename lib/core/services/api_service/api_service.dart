@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import '../../constants/app_keys.dart';
 import 'api_interceptor.dart';
-import '../../global/global.dart';
 import 'api_response_model.dart';
 
 /// A Singleton onboarding_service class that handles API requests using Dio.
@@ -63,7 +62,14 @@ class ApiService {
           : "Something went wrong";
       return ApiResponseModel(message: errorMsg);
     } else {
-      return ApiResponseModel(message: "Something went wrong");
+      String errorMsg = "Something went wrong";
+      switch (e.type) {
+        case DioExceptionType.connectionError:
+          errorMsg = "Check your internet connection";
+        default:
+          errorMsg = "Something went wrong";
+      }
+      return ApiResponseModel(message: errorMsg);
     }
   }
 
@@ -77,9 +83,6 @@ class ApiService {
     String? fileKey = 'file',
     dynamic model,
   }) async {
-    if (!await Global.checkInternet()) {
-      return ApiResponseModel();
-    }
     try {
       dynamic payload = body;
       if (file != null) {
@@ -113,9 +116,6 @@ class ApiService {
     Map<String, dynamic>? queryParameters,
     dynamic model,
   }) async {
-    if (!await Global.checkInternet()) {
-      return ApiResponseModel();
-    }
     try {
       final response = await dio.get(
         endpoint,

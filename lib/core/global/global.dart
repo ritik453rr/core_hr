@@ -41,14 +41,14 @@ class Global {
   }
 
 
-  static void printError(String? value){
+  static void printErrorMsg(String? value){
     if(value==null || value.isEmpty){
       return;
     }
     debugPrint("❌ ❌ ❌ $value");
   }
 
-  static void printInfo(String? value){
+  static void printInfoMsg(String? value){
     if(value==null || value.isEmpty){
       return;
     }

@@ -10,36 +10,35 @@ class ApiInterceptor extends Interceptor {
     if (token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
-    Global.logger.i('''
-      REQUEST
-      METHOD:${options.method.toUpperCase()}
-      URL:${options.uri}
-      HEADERS:${options.headers}
-      BODY: ${options.data}''');
+    Global.logger.i(
+      'REQUEST'
+      '\nMETHOD:${options.method.toUpperCase()}'
+      '\nURL:${options.uri}'
+      '\nHEADERS:${options.headers}'
+      '\nBODY: ${options.data}',
+    );
     handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    Global.logger.i('''
-      RESPONSE
-      STATUS CODE:${response.statusCode}
-      URL:${response.requestOptions.uri}
-      RESPONSE DATA:${response.data}
-       ''');
+    Global.logger.i(
+      'RESPONSE'
+      '\nSTATUS CODE:${response.statusCode}'
+      '\nURL:${response.requestOptions.uri}'
+      '\nRESPONSE DATA:${response.data}',
+    );
     handler.next(response);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     Global.logger.e(
-      '<-- ERROR ${err.response?.statusCode} ${err.requestOptions.uri}',
-      error: err.error,
-      stackTrace: err.stackTrace,
+      'ERROR'
+      '\nSTATUS CODE:${err.response?.statusCode}'
+      '\nURL:${err.requestOptions.uri}'
+      '${err.response != null ? '\nError Data: ${err.response?.data}' : ''}',
     );
-    if (err.response != null) {
-      Global.logger.e('Error Data: ${err.response?.data}');
-    }
     handler.next(err);
   }
 }

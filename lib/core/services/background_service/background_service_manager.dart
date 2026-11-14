@@ -1,3 +1,4 @@
+import 'package:core_hr/core/services/background_service/background_service_events.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 
 import '../../global/global.dart';
@@ -7,52 +8,57 @@ class BackgroundServiceManager {
 
   static final BackgroundServiceManager instance = BackgroundServiceManager._();
 
-  final FlutterBackgroundService _service = FlutterBackgroundService();
+  static final FlutterBackgroundService backgroundService =
+      FlutterBackgroundService();
 
   Future<bool> isRunning() {
-    return _service.isRunning();
+    return backgroundService.isRunning();
   }
 
   // Start background service
   Future<bool> startBackgroundService() async {
     try {
       if (await isRunning()) {
-        Global.printInfo('Background service is already running.');
+        Global.printInfoMsg('Background service is already running.');
         return true;
       }
-      final started = await _service.startService();
+      final started = await backgroundService.startService();
 
       if (started) {
         Global.printSuccessMsg('Background service started successfully.');
       } else {
-        Global.printError('Failed to start background service.');
+        Global.printErrorMsg('Failed to start background service.');
       }
       return started;
     } catch (error) {
-      Global.printError('Error starting background service: $error');
+      Global.printErrorMsg('Error starting background service: $error');
       return false;
     }
   }
 
   void sendEvent(String event) {
-    _service.invoke(event);
+    try {
+      backgroundService.invoke(event);
+    } catch (error) {
+      Global.printErrorMsg('Failed to send background service event: $event');
+    }
   }
 
   Stream<Map<String, dynamic>?> listen(String event) {
-    return _service.on(event);
+    return backgroundService.on(event);
   }
 
   // Stop background service
   Future<void> stopBackgroundService() async {
     try {
       if (!await isRunning()) {
-        Global.printInfo('Background service is not running.');
+        Global.printInfoMsg('Background service is not running.');
         return;
       }
-      sendEvent('stopService');
-      Global.logger.i("Background service stopped");
+      sendEvent(BackgroundServiceEvents.stopService);
+      Global.printInfoMsg("Background service stopped");
     } catch (error) {
-      Global.logger.e('Error stopping background service: $error');
+      Global.printErrorMsg('Error stopping background service: $error');
     }
   }
 }

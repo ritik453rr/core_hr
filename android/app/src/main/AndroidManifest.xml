@@ -23,12 +23,13 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:label="Core HR">
+        <!-- Added For BG Service Start -->
         <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
             android:exported="false"
             android:foregroundServiceType="location"
             tools:replace="android:exported" />
-
+        <!-- Added For BG Service End -->
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

@@ -87,9 +87,9 @@ class ProfileController extends GetxController {
         homeController.isCheckIn = isCheckedIn;
       }
       if (isCheckedIn) {
-        LocationTrackingService.instance.startLocationBgService();
+        LocationTrackingService.instance.startLocationTracking();
       } else {
-        LocationTrackingService.instance.stopBackgroundService();
+        LocationTrackingService.instance.stopLocationTracking();
       }
     } else {
       AppToast.showToast(message: resModel.message);
@@ -165,7 +165,7 @@ class ProfileController extends GetxController {
     update([ProfileBuilderIds.loadingOverlay]);
     final resModel = await authRepo.logout();
     if (resModel.status) {
-      AppStorage.logOut();
+      await AppStorage.logout();
     } else {
       AppToast.showToast(message: resModel.message);
     }

@@ -15,7 +15,7 @@ class LocationService {
       }
       return await Geolocator.getCurrentPosition();
     } catch (e) {
-      Global.printError(e.toString());
+      Global.printErrorMsg(e.toString());
       return null;
     }
   }

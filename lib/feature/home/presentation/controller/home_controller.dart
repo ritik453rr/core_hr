@@ -44,9 +44,9 @@ class HomeController extends GetxController {
       if (responseModel.status) {
         isCheckIn = !isCheckIn;
         if (isCheckIn) {
-          LocationTrackingService.instance.startLocationBgService();
+          LocationTrackingService.instance.startLocationTracking();
         } else {
-          LocationTrackingService.instance.stopBackgroundService();
+          LocationTrackingService.instance.stopLocationTracking();
         }
       } else {
         AppToast.showToast(message: responseModel.message);
