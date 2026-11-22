@@ -33,26 +33,24 @@ class Global {
     }
   }
 
-  static void printSuccessMsg(String? value){
-    if(value==null || value.isEmpty){
+  static void printSuccessMsg(String? value) {
+    if (value == null || value.isEmpty) {
       return;
     }
-    debugPrint("✅ ✅ ✅ $value");
+    debugPrint("✅ ✅ ✅ Success: $value");
   }
 
-
-  static void printErrorMsg(String? value){
-    if(value==null || value.isEmpty){
+  static void printErrorMsg(String? value) {
+    if (value == null || value.isEmpty) {
       return;
     }
-    debugPrint("❌ ❌ ❌ $value");
+    debugPrint("❌ ❌ ❌ Error: $value");
   }
 
-  static void printInfoMsg(String? value){
-    if(value==null || value.isEmpty){
+  static void printInfoMsg(String? value) {
+    if (value == null || value.isEmpty) {
       return;
     }
-    debugPrint("🔵 🔵 🔵 $value");
+    debugPrint("🔵 🔵 🔵 Info: $value");
   }
-
 }

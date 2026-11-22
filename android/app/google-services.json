@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "117398541837",
+    "project_id": "hrms-runy-tech",
+    "storage_bucket": "hrms-runy-tech.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117398541837:android:54025f80f61ba54fa6a744",
+        "android_client_info": {
+          "package_name": "com.corehr.app.core_hr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKXJsRPzvwV0y5DI6rXwFDNCUfQEcCXSs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

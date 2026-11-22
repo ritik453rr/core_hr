@@ -1,4 +1,4 @@
-package com.corehr.app.core_hr
+package com.corehr.runy
 
 import io.flutter.embedding.android.FlutterActivity
 

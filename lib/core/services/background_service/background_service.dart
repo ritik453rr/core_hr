@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:core_hr/core/services/background_service/background_service_events.dart';
-import 'package:core_hr/core/services/background_service/background_service_manager.dart';
-import 'package:core_hr/core/services/location_service/location_service_events.dart';
 import 'package:core_hr/core/services/location_service/location_tracking_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -17,6 +15,8 @@ const int locationNotificationId = 888;
 /// Initializes the background service.
 Future<void> configuredBackgroundService() async {
   try {
+    final backgroundService = FlutterBackgroundService();
+
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       locationNotificationChannelId,
       'MY FOREGROUND SERVICE',
@@ -32,25 +32,24 @@ Future<void> configuredBackgroundService() async {
         >()
         ?.createNotificationChannel(channel);
 
-    final bool configured = await BackgroundServiceManager.backgroundService
-        .configure(
-          androidConfiguration: AndroidConfiguration(
-            onStart: locationServiceEntryPoint,
-            autoStart: false,
-            autoStartOnBoot: false,
-            isForegroundMode: true,
-            notificationChannelId: locationNotificationChannelId,
-            initialNotificationTitle: 'Background Tracking',
-            initialNotificationContent: 'Background tracking is running',
-            foregroundServiceNotificationId: locationNotificationId,
-            foregroundServiceTypes: [AndroidForegroundType.location],
-          ),
-          iosConfiguration: IosConfiguration(
-            autoStart: false,
-            onForeground: locationServiceEntryPoint,
-            onBackground: iosBackgroundHandler,
-          ),
-        );
+    final bool configured = await backgroundService.configure(
+      androidConfiguration: AndroidConfiguration(
+        onStart: locationServiceEntryPoint,
+        autoStart: false,
+        autoStartOnBoot: false,
+        isForegroundMode: true,
+        notificationChannelId: locationNotificationChannelId,
+        initialNotificationTitle: 'Background Tracking',
+        initialNotificationContent: 'Background tracking is running',
+        foregroundServiceNotificationId: locationNotificationId,
+        foregroundServiceTypes: [AndroidForegroundType.location],
+      ),
+      iosConfiguration: IosConfiguration(
+        autoStart: false,
+        onForeground: locationServiceEntryPoint,
+        onBackground: iosBackgroundHandler,
+      ),
+    );
 
     if (configured) {
       Global.printSuccessMsg('Background service configured successfully.');
@@ -62,8 +61,45 @@ Future<void> configuredBackgroundService() async {
   }
 }
 
+// Start background service
+Future<bool> startBackgroundService() async {
+  try {
+    final backgroundService = FlutterBackgroundService();
+    final bool isRunning = await backgroundService.isRunning();
+    if (isRunning) {
+      Global.printInfoMsg('Background service is already running.');
+      return true;
+    }
+    final started = await backgroundService.startService();
+
+    if (started) {
+      Global.printSuccessMsg('Background service started successfully.');
+    } else {
+      Global.printErrorMsg('Failed to start background service.');
+    }
+    return started;
+  } catch (error) {
+    Global.printErrorMsg('Error starting background service: $error');
+    return false;
+  }
+}
+
+Future<void> stopBackgroundService() async {
+  try {
+    final backgroundService = FlutterBackgroundService();
+    final bool isRunning = await backgroundService.isRunning();
+    if (isRunning) {
+      Global.printInfoMsg('Background service is not running.');
+      return;
+    }
+    backgroundService.invoke(BackgroundServiceEvents.stopService);
+    Global.printInfoMsg("Background service stopped");
+  } catch (error) {
+    Global.printErrorMsg('Error stopping background service: $error');
+  }
+}
+
 /// iOS background-fetch handler.
-/// This does not provide continuous location tracking.
 @pragma('vm:entry-point')
 Future<bool> iosBackgroundHandler(ServiceInstance service) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -87,7 +123,7 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
     }
 
     // Start location tracking.
-    service.on(LocationServiceEvents.startTracking).listen((event) async {
+    service.on(BackgroundServiceEvents.startLocationTracking).listen((event) async {
       try {
         await LocationTrackingService.instance.startLocationUpdates();
       } catch (error) {
@@ -96,7 +132,7 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
     });
 
     // Stop location tracking.
-    service.on(LocationServiceEvents.stopTracking).listen((event) async {
+    service.on(BackgroundServiceEvents.stopLocationTracking).listen((event) async {
       try {
         await LocationTrackingService.instance.stopLocationUpdates();
       } catch (error) {
@@ -109,7 +145,7 @@ Future<void> locationServiceEntryPoint(ServiceInstance service) async {
       try {
         await LocationTrackingService.instance.stopLocationUpdates();
       } catch (error) {
-        Global.printErrorMsg('Failed to stop location updates:$error');
+        Global.printErrorMsg('Failed to stop background service:$error');
       } finally {
         service.invoke(BackgroundServiceEvents.serviceStopped);
         await service.stopSelf();

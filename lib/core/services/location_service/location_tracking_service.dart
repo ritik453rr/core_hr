@@ -1,18 +1,18 @@
 import 'dart:async';
-import 'package:core_hr/core/services/location_service/location_service_events.dart';
+import 'package:core_hr/core/services/background_service/background_service_events.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../../feature/home/data/entity/location_update_entity.dart';
 import '../../global/global.dart';
 import '../app_permission_service/app_permission_service.dart';
-import '../background_service/background_service_manager.dart';
+import '../background_service/background_service.dart';
 
 class LocationTrackingService {
   LocationTrackingService._();
 
   static final LocationTrackingService instance = LocationTrackingService._();
 
-  final BackgroundServiceManager _backgroundService =
-      BackgroundServiceManager.instance;
+  final _backgroundService = FlutterBackgroundService();
 
   bool _starting = false;
   StreamSubscription<Position>? positionSubscription;
@@ -42,7 +42,7 @@ class LocationTrackingService {
 
       if (isRunning) {
         // Service is already running.
-        _backgroundService.sendEvent('startTracking');
+        _backgroundService.invoke(BackgroundServiceEvents.startLocationTracking);
         Global.printInfoMsg('Start tracking command sent.');
         return;
       }
@@ -50,7 +50,7 @@ class LocationTrackingService {
       // 3. Listen for readiness BEFORE starting the service.
       final ready = Completer<void>();
 
-      final subscription = _backgroundService.listen('serviceReady').listen((
+      final subscription = _backgroundService.on(BackgroundServiceEvents.serviceReady).listen((
         event,
       ) {
         if (!ready.isCompleted) {
@@ -60,7 +60,7 @@ class LocationTrackingService {
 
       try {
         // 4. Start the background service.
-        final bool started = await _backgroundService.startBackgroundService();
+        final bool started = await startBackgroundService();
 
         if (!started) {
           Global.logger.e('Failed to start background service.');
@@ -71,7 +71,9 @@ class LocationTrackingService {
         await ready.future.timeout(const Duration(seconds: 15));
 
         // 6. Send the tracking command.
-        _backgroundService.sendEvent('startTracking');
+        _backgroundService.invoke(
+          BackgroundServiceEvents.startLocationTracking,
+        );
 
         Global.logger.i('Location tracking started.');
       } on TimeoutException {
@@ -93,7 +95,7 @@ class LocationTrackingService {
         Global.printInfoMsg('Background service is not running.');
         return;
       }
-      _backgroundService.sendEvent(LocationServiceEvents.stopTracking);
+      _backgroundService.invoke(BackgroundServiceEvents.stopLocationTracking);
       Global.printInfoMsg('Stop tracking command sent.');
     } catch (error) {
       Global.printErrorMsg('Failed to stop location tracking: $error');
