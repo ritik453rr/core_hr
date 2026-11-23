@@ -68,6 +68,7 @@ ios/DerivedData/
 # ============================================================
 # Firebase
 # ============================================================
+firebase_options.dart
 
 firebase-debug.log
 firestore-debug.log
