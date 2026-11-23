@@ -11,19 +11,21 @@ class AppPermissionService {
       final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
       if (!serviceEnabled) {
-        Global.logger.e('''device location is off''');
+        Global.printErrorMsg('''device location is off''');
         return false;
       }
 
       final status = await Permission.locationAlways.status;
       if (!status.isGranted) {
-        Global.logger.e('''location always permission is not granted''');
+        Global.printErrorMsg('''Always location permission is not granted''');
         return false;
       }
 
       return true;
-    } catch (e) {
-      Global.logger.e(e.toString());
+    } catch (e, s) {
+      Global.printErrorMsg(
+        "Failed to check location Permission ${e.toString()}\n${s.toString()}",
+      );
       return false;
     }
   }

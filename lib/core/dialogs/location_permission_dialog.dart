@@ -8,7 +8,7 @@ import '../constants/app_text_style.dart';
 import '../language/string_constants.dart';
 
 /// Displays the adaptive location permission dialog prompting users to enable permanent location access in Settings.
-Future<dynamic> showLocationPermissionDialog({void Function()? onOpenSettings}) {
+Future<dynamic> showLocationPermissionDialog() {
   return Get.dialog(
     barrierDismissible: false,
     PopScope(
@@ -29,9 +29,7 @@ Future<dynamic> showLocationPermissionDialog({void Function()? onOpenSettings}) 
             style: AppTextStyle.semiBold14Blue,
             onPressed: () async {
               AppConstants.hapticFeedBack();
-              Get.back();
               openAppSettings();
-              onOpenSettings?.call();
             },
           ),
         ],

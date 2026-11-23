@@ -1,9 +1,8 @@
 import 'package:core_hr/core/dialogs/location_permission_dialog.dart';
 import 'package:core_hr/core/services/app_permission_service/app_permission_service.dart';
+import 'package:core_hr/core/services/notification_service/notification_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
-import '../../../../core/services/location_service/location_tracking_service.dart';
 
 enum DashboardBuilderIds { dashboard }
 
@@ -14,8 +13,9 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
 
   @override
   void onInit() {
-    checkLocationPermission();
     WidgetsBinding.instance.addObserver(this);
+    requestPermissions();
+    getFcmToken();
     super.onInit();
   }
 
@@ -27,16 +27,27 @@ class DashboardController extends GetxController with WidgetsBindingObserver {
     }
   }
 
+  Future<void> requestPermissions() async {
+    await checkLocationPermission();
+    await NotificationService.requestNotificationPermission();
+  }
+
   Future<void> checkLocationPermission() async {
     final isPermission =
         await AppPermissionService.isPermanentLocationPermissionGranted();
     if (!isPermission) {
-      showLocationPermissionDialog();
+      if (Get.isDialogOpen == false) {
+        showLocationPermissionDialog();
+      }
     } else {
       if (Get.isDialogOpen == true) {
         Get.back();
       }
     }
+  }
+
+  void getFcmToken() {
+    NotificationService.getFcmToken();
   }
 
   /// Changes the active navigation index and updates the UI.

@@ -14,6 +14,7 @@ class AppStorage {
   static const String authToken = "authToken";
   static const String userProfile = "userProfile";
   static const String loginStatus = "loginStatus";
+  static const String fcmTokenKey = "fcmTokenKey";
 
   static void saveLoginStatus(bool value) {
     _storage.write(loginStatus, value);
@@ -21,6 +22,10 @@ class AppStorage {
 
   static bool getLoginStatus() {
     return _storage.read(loginStatus) ?? false;
+  }
+
+  static Future<void> saveFcmToken(String value) async {
+    await _storage.write(fcmTokenKey, value);
   }
 
   static void saveAuthToken(String value) {

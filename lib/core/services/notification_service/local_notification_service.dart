@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../../global/global.dart';
 
 /// Manages local notifications and handles notification display and routing.
 class LocalNotificationService {
@@ -16,65 +15,45 @@ class LocalNotificationService {
       );
 
   static Future<void> initializeLocalNotification() async {
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosInit = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-    const settings = InitializationSettings(android: androidInit, iOS: iosInit);
-    await _localNotificationPlugin.initialize(
-      settings: settings,
-      onDidReceiveNotificationResponse: (response) async {
-        // if (response.payload == null || response.payload!.isEmpty) {
-        //   return;
-        // }
-        // try {
-        //   final dynamic decoded = jsonDecode(response.payload!);
-        //
-        //   if (decoded is! Map<String, dynamic>) {
-        //     return;
-        //   }
-        //   final Map<String, dynamic> data = decoded;
-        //   if (data['type'] == NotificationType.downloadComplete) {
-        //     final String? filePath = data['file_path']?.toString();
-        //     debugPrint('Download notification tapped');
-        //     debugPrint('Downloaded file path: $filePath');
-        //     if (filePath != null && filePath.isNotEmpty) {
-        //       await FileSaverService.openDownloadedFile(filePath);
-        //     } else {
-        //       debugPrint('File path missing from notification payload');
-        //     }
-        //     return;
-        //   }
-        //   final PushNotificationModel model = PushNotificationModel.fromJson(
-        //     data,
-        //   );
-        //   NotificationRouter.redirect(model);
-        // } catch (e, stackTrace) {
-        //   debugPrint('Notification tap error: $e');
-        //   debugPrintStack(stackTrace: stackTrace);
-        // }
-      },
-    );
-    // Explicitly request iOS local notification permissions.
-    final iosPlugin = _localNotificationPlugin
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >();
-    await iosPlugin?.requestPermissions(alert: true, badge: true, sound: true);
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
-    // Create Android notification channel.
-    await _localNotificationPlugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.createNotificationChannel(_androidChannel);
+    try {
+      const androidInit = AndroidInitializationSettings('ic_notification');
+      const iosInit = DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+      );
+
+      const settings = InitializationSettings(
+        android: androidInit,
+        iOS: iosInit,
+      );
+
+      await _localNotificationPlugin.initialize(
+        settings: settings,
+        onDidReceiveNotificationResponse: (response) async {},
+      );
+
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+
+      // Create Android notification channel.
+      await _localNotificationPlugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.createNotificationChannel(_androidChannel);
+
+      Global.printSuccessMsg('Local notification initialized successfully.');
+    } catch (e, s) {
+      Global.printErrorMsg(
+        'Failed to initialize local notification: ${e.toString()}\n${s.toString()}',
+      );
+      rethrow;
+    }
   }
 
   /// Returns a notification ID within the valid 32-bit integer range.
@@ -90,9 +69,6 @@ class LocalNotificationService {
   static Future<void> show(RemoteMessage message) async {
     final String? titleText = message.notification?.title;
     final String? bodyText = message.notification?.body;
-    '';
-    // final data = {...message.data, 'title': titleText, 'description': bodyText};
-    // final model = PushNotificationModel.fromJson(data);
     final notificationId = _getNotificationId(message: message);
     StyleInformation? bigTextStyleInfo;
     if ((bodyText != null && bodyText.isNotEmpty) &&
@@ -111,7 +87,7 @@ class LocalNotificationService {
       'High Importance Notifications',
       channelDescription: 'notifications',
       importance: Importance.max,
-      icon: '@mipmap/ic_launcher',
+      icon: 'ic_notification',
       priority: Priority.high,
       playSound: true,
       styleInformation: bigTextStyleInfo,
@@ -133,10 +109,9 @@ class LocalNotificationService {
         title: titleText,
         body: bodyText,
         notificationDetails: notificationDetails,
-        // payload: jsonEncode(data),
       );
     } catch (e) {
-      debugPrint('Local notification error: $e');
+      Global.printErrorMsg('Local notification error: ${e.toString()}');
     }
   }
 }

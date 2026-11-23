@@ -15,7 +15,9 @@ class LocationService {
       }
       return await Geolocator.getCurrentPosition();
     } catch (e) {
-      Global.printErrorMsg(e.toString());
+      Global.printErrorMsg(
+        "Failed to check permanent location permission: ${e.toString()}",
+      );
       return null;
     }
   }

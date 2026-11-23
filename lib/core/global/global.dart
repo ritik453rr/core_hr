@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,21 +35,27 @@ class Global {
     }
   }
 
-  static void printSuccessMsg(String? value) {
+  static void printSuccessMsg(
+    String? value, {
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
     if (value == null || value.isEmpty) {
       return;
     }
     debugPrint("✅ ✅ ✅ Success: $value");
   }
 
-  static void printErrorMsg(String? value) {
+  static void printErrorMsg(
+    String? value) {
     if (value == null || value.isEmpty) {
       return;
     }
     debugPrint("❌ ❌ ❌ Error: $value");
   }
 
-  static void printInfoMsg(String? value) {
+  static void printInfoMsg(
+    String? value) {
     if (value == null || value.isEmpty) {
       return;
     }
